@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SIM Asesmen Pintar — SMPN 2 Gelumbang</title>
+  <title>SIM Asesmen Pintar — Terintegrasi Cloud & Offline</title>
   <!-- Baris ini ditambahkan untuk memancing panel Preview terbuka -->
   <style>
     :root {
@@ -1828,51 +1828,20 @@
             <div class="card-header"><div><div class="card-title">⚙️ Pengaturan Identitas & GAS</div></div></div>
             <div class="form-group">
               <label class="form-label">GAS Web App URL (Hasil Deploy Apps Script)</label>
-              <input type="text" id="settingGasUrl" class="form-control" placeholder="https://script.google.com/macros/s/..." />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Google Spreadsheet ID (Database)</label>
-              <input type="text" id="settingSheetId" class="form-control" placeholder="ID Spreadsheet Anda" />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Google Drive Folder ID (Foto)</label>
-              <input type="text" id="settingFolderId" class="form-control" placeholder="ID Folder Drive Foto" />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Google Drive Folder ID (QR)</label>
-              <input type="text" id="settingFolderQrId" class="form-control" placeholder="1lIeXVQ-TlrYDy2d4eWnaje85m9d6Uw3Q" />
-            </div>
-            <hr style="border-color:var(--border); margin:1rem 0;" />
-            <div class="form-group"><label class="form-label">Nama Sekolah</label><input type="text" id="profNamaInput" class="form-control"/></div>
-            <div class="form-group"><label class="form-label">Alamat Sekolah</label><input type="text" id="profAlamatInput" class="form-control"/></div>
-            <div class="form-group"><label class="form-label">Tahun Ajaran</label><input type="text" id="settingTahunAjaran" class="form-control" placeholder="2026/2027" /></div>
-            <div class="form-group"><label class="form-label">Kepala Sekolah</label><input type="text" id="profKepsekInput" class="form-control"/></div>
-            <div class="form-group"><label class="form-label">NIP Kepala Sekolah</label><input type="text" id="profNipInput" class="form-control"/></div>
-            <div class="form-group">
-                <label class="form-label">Link/URL Logo Kiri (Header Dokumen)</label>
-                <input type="text" id="settingLogoKiriUrl" class="form-control" />
-                <div style="font-size:0.7rem; color:var(--text-light); margin-top:4px;">Atau unggah file logo kiri: <input type="file" id="settingLogoKiriFile" accept="image/*" style="font-size:0.7rem;" /></div>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Link/URL Logo Kanan (Header Dokumen)</label>
-                <input type="text" id="settingLogoKananUrl" class="form-control" />
-                <div style="font-size:0.7rem; color:var(--text-light); margin-top:4px;">Atau unggah file logo kanan: <input type="file" id="settingLogoKananFile" accept="image/*" style="font-size:0.7rem;" /></div>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Teks Berjalan (Marquee Header)</label>
-                <input type="text" id="settingRunningText" class="form-control" />
-            </div>
-            <button class="btn btn-primary" id="btnSaveSettings" style="margin-top:10px;">💾 Simpan Pengaturan</button>
-          </div>
-          <div class="card">
-            <div class="card-header"><div><div class="card-title">🔄 Sumber Data Peserta Asesmen (CSV)</div></div></div>
-            <p style="font-size:0.8rem; margin-bottom:1rem;">Tautkan link CSV dari Google Spreadsheet untuk memuat data peserta asesmen secara dinamis.</p>
-            <div class="form-group">
-                <label class="form-label">Link CSV Data Siswa</label>
-                <div style="display:flex; gap:0.5rem;">
-                    <input type="text" id="settingStudentCsvUrl" class="form-control" />
-                    <button class="btn btn-primary" id="btnSyncStudentCsv">🔄 Sinkron CSV</button>
-                </div>
+              <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                  <input type="text" id="settingGasUrl" class="form-control" placeholder="https://script.google.com/macros/s/..." style="flex:1; min-width:200px;" />
+                  <button class="btn btn-success" id="btnPullGas" title="Tarik seluruh data dari Cloud (Gunakan saat buka di komputer baru)">📥 Tarik Data Cloud</button>
+              </div>
+              <div style="font-size:0.75rem; color:var(--warning); font-weight:700; margin-top:4px; line-height:1.4; background:var(--warning-soft); padding:8px; border-radius:6px;">
+                  💡 <strong>Info Penting Saat Berpindah Komputer:</strong> Jika Anda membuka aplikasi ini di komputer lain, tempelkan <strong>URL GAS</strong> Anda di sini, lalu klik <strong>Tarik Data Cloud</strong>. (JANGAN klik Simpan sebelum ditarik, agar pengaturan lama tidak tertimpa).
+              </div>
+              <div style="margin-top: 10px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); padding: 8px 12px; border-radius: 6px;">
+                  <label style="display:flex; align-items:center; gap: 8px; font-size: 0.8rem; cursor: pointer; color: var(--text);">
+                      <input type="checkbox" id="settingAutoSync" style="width: 1.1rem; height: 1.1rem; cursor: pointer;" />
+                      <strong>Otomatis tarik data dari Cloud saat aplikasi dibuka</strong>
+                  </label>
+                  <div style="font-size:0.7rem; color:var(--text-muted); margin-left: 26px; margin-top: 2px;">Fitur ini memastikan data yang tampil selalu sinkron dan sama di semua komputer/perangkat.</div>
+              </div>
             </div>
             
             <hr style="border-color:var(--border); margin:1.5rem 0 1rem;" />
@@ -2131,6 +2100,7 @@
             logoKananUrl: 'https://res.cloudinary.com/dqztkjx8i/image/upload/v1760185516/1692069187442-removebg-preview_y1vwbd.png',
             runningText: 'Selamat datang di Sistem Informasi dan Manajemen Asesmen Digital SMPN 2 Gelumbang. Akses portal utama =>> bit.ly/guruwali2glb <<=',
             darkMode: false,
+            autoSyncCloud: true,
             waktu: { durasi: 120, tokenTrigger: 90, tokenStr: '', pesan: '', startTime: null, isRunning: false },
             links: { 
                 kelas7: ["PABP", "PKN", "BAHASA INDONESIA", "MATEMATIKA", "IPA", "BAHASA INGGRIS", "IPS", "PRAKARYA", "INFORMATIKA", "PJOK"].map(m => ({mapel: m, url: '', aktif: false})),
@@ -2184,6 +2154,8 @@
         return defaultDb;
       }
 
+      let syncTimeout = null;
+
       function saveData() {
         try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
@@ -2193,7 +2165,13 @@
                 showToast("⚠️ Memori perangkat penuh. Data tetap diamankan di Cloud.");
             }
         }
-        syncDataToCloud(); // Sinkronisasi otomatis ke Spreadsheet/Cloud GAS
+        
+        // Anti-Spam (Debounce) Sinkronisasi ke Cloud GAS agar lebih stabil dan data tidak hilang/gagal simpan
+        if (syncTimeout) clearTimeout(syncTimeout);
+        syncTimeout = setTimeout(() => {
+            syncDataToCloud(); 
+        }, 1500);
+        
         renderAll();
       }
 
@@ -2201,11 +2179,41 @@
       async function syncDataToCloud() {
           if (!db.settings.gasUrl) return;
           try {
+              // Buat salinan data (Deep Copy) untuk dikirim ke Cloud
+              let cloudDb = JSON.parse(JSON.stringify(db));
+              
+              // Hapus gambar Base64 dari payload agar tidak ditolak oleh limit Google Apps Script (100KB)
+              if (cloudDb.settings) {
+                  delete cloudDb.settings.templatesPortrait;
+                  delete cloudDb.settings.templatesLandscape;
+                  delete cloudDb.settings.bgKartuPortrait;
+                  delete cloudDb.settings.bgKartuLandscape;
+              }
+              
+              // KOMPRESI PAYLOAD: Hanya kirim ID dan Tautan Foto agar sangat ringan & tidak gagal simpan
+              let photoMapping = { students: {}, teachers: {} };
+              
+              db.students.forEach(s => {
+                  if (s.photoUrl || s.qrUrl) {
+                      photoMapping.students[s.id] = { p: s.photoUrl, q: s.qrUrl };
+                  }
+              });
+              db.teachers.forEach(t => {
+                  if (t.photoUrl || t.role) { 
+                      const tKey = (t.kode && t.kode.trim() !== '-') ? t.kode.trim() : (t.nama || '').trim().toUpperCase();
+                      photoMapping.teachers[tKey] = { p: t.photoUrl, r: t.role };
+                  }
+              });
+
+              cloudDb.students = []; 
+              cloudDb.teachers = []; 
+              cloudDb.photoMapping = photoMapping;
+              
               await fetch(db.settings.gasUrl, {
                   method: 'POST',
                   // Mengubah tipe pengiriman agar terhindar dari blokir preflight CORS browser
                   headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                  body: JSON.stringify({ action: 'saveData', data: db })
+                  body: JSON.stringify({ action: 'saveData', data: cloudDb })
               });
           } catch(e) {
               console.error("Gagal sinkronisasi otomatis ke GAS", e);
@@ -2512,64 +2520,91 @@
           document.getElementById('modalCctv').classList.remove('open');
       });
 
+      // Tombol Eksekutor Tarik Data Secara Paksa untuk Komputer Baru
+      document.getElementById('btnPullGas')?.addEventListener('click', async () => {
+          const newUrl = document.getElementById('settingGasUrl').value;
+          if (!newUrl) return showToast('Masukkan URL GAS terlebih dahulu!');
+          db.settings.gasUrl = newUrl;
+          await fetchRealtimeGasData(true);
+      });
+
       async function fetchRealtimeGasData(isManualSync = false) {
           if (!db.settings.gasUrl) {
               if (isManualSync) showToast('URL GAS belum diatur di Pengaturan!');
               return;
           }
-          if (isManualSync) showToast('Menyinkronkan data dengan Cloud...');
+          if (isManualSync) {
+              const btn = document.getElementById('btnPullGas');
+              if(btn) { btn.disabled = true; btn.innerHTML = '⏳ Menarik...'; }
+              showToast('Menyinkronkan data dengan Cloud...');
+          }
           try {
               const response = await fetch(db.settings.gasUrl + '?action=getData');
               if (response.ok) {
                   const cloudData = await response.json();
-                  if (cloudData && cloudData.students) {
+                  // Validasi ketat: pastikan cloud benar-benar memiliki data sebelum menimpa
+                  if (cloudData && Object.keys(cloudData).length > 0) {
+                      
+                      // Amankan pengaturan lokal yang berat (template) agar tidak hilang
+                      const localTemplatesP = db.settings.templatesPortrait || [];
+                      const localTemplatesL = db.settings.templatesLandscape || [];
+                      const localBgP = db.settings.bgKartuPortrait || '';
+                      const localBgL = db.settings.bgKartuLandscape || '';
+
+                      if (cloudData.settings) {
+                          db.settings = { ...db.settings, ...cloudData.settings };
+                          db.settings.templatesPortrait = localTemplatesP;
+                          db.settings.templatesLandscape = localTemplatesL;
+                          db.settings.bgKartuPortrait = localBgP;
+                          db.settings.bgKartuLandscape = localBgL;
+                      }
+
                       // Pertahankan jadwal cloud jika sudah tersimpan
-                      const currentJadwal = cloudData.jadwal_data || db.jadwal_data;
-                      db = { ...db, ...cloudData };
-                      if (currentJadwal) db.jadwal_data = currentJadwal;
+                      if (cloudData.jadwal_data) db.jadwal_data = cloudData.jadwal_data;
+                      if (cloudData.reports) db.reports = cloudData.reports;
+                      
+                      // Pulihkan foto dan setingan khusus dari peta (Mapping) efisiensi
+                      if (cloudData.photoMapping) {
+                          if (cloudData.photoMapping.students) {
+                              db.students.forEach(s => {
+                                  const mapS = cloudData.photoMapping.students[s.id];
+                                  if (mapS) {
+                                      if(mapS.p) s.photoUrl = mapS.p;
+                                      if(mapS.q) s.qrUrl = mapS.q;
+                                  }
+                              });
+                          }
+                          if (cloudData.photoMapping.teachers) {
+                              db.teachers.forEach(t => {
+                                  const tKey = (t.kode && t.kode.trim() !== '-') ? t.kode.trim() : (t.nama || '').trim().toUpperCase();
+                                  const mapT = cloudData.photoMapping.teachers[tKey];
+                                  if (mapT) {
+                                      if (mapT.p) t.photoUrl = mapT.p;
+                                      if (mapT.r) t.role = mapT.r;
+                                  }
+                              });
+                          }
+                      } else {
+                          // Dukungan ke belakang jika skema lama masih dipakai
+                          if (cloudData.students && cloudData.students.length > 0) db.students = cloudData.students;
+                          if (cloudData.teachers && cloudData.teachers.length > 0) db.teachers = cloudData.teachers;
+                      }
                       
                       try { localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); } catch(e) {}
                       renderAll();
-                      if (isManualSync) showToast('Sinkronisasi berhasil! Data terbaru dimuat.');
+                      if (isManualSync) showToast('Data berhasil ditarik sempurna dari Cloud!');
                   }
               }
           } catch(e) {
-              if (isManualSync) showToast('Gagal terhubung ke GAS.');
+              if (isManualSync) showToast('Gagal terhubung ke GAS. Cek koneksi.');
               console.error("Sinkronisasi gagal", e);
+          } finally {
+              if (isManualSync) {
+                  const btn = document.getElementById('btnPullGas');
+                  if(btn) { btn.disabled = false; btn.innerHTML = '📥 Tarik Data Cloud'; }
+              }
           }
       }
-
-      // SINKRONISASI REAL-TIME OTOMATIS (Tanpa Mengganggu Input Form)
-      let lastCloudDataString = "";
-      async function autoSyncFromCloud() {
-          if (!db.settings.gasUrl) return;
-          try {
-              const response = await fetch(db.settings.gasUrl + '?action=getData');
-              if (response.ok) {
-                  const cloudDataText = await response.text();
-                  // Hanya eksekusi render jika ada perbedaan data (mencegah kedip berlebih)
-                  if (cloudDataText !== lastCloudDataString && cloudDataText.length > 50) {
-                      lastCloudDataString = cloudDataText;
-                      const cloudData = JSON.parse(cloudDataText);
-                      if (cloudData && cloudData.settings) {
-                          db = { ...db, ...cloudData };
-                          try { localStorage.setItem(STORAGE_KEY, JSON.stringify(db)); } catch(e) {}
-                          
-                          // Render ulang bagian display saja (tidak merender Pengaturan/Seting Waktu yang mungkin sedang diketik panitia)
-                          renderDashboard();
-                          renderBukuInduk();
-                          renderCardsGrid();
-                          renderDenah();
-                          renderJadwal();
-                          renderPanitia();
-                          renderGaleri();
-                          renderLinkSettings();
-                      }
-                  }
-              }
-          } catch(e) {}
-      }
-      setInterval(autoSyncFromCloud, 10000); // Tarik data setiap 10 detik
 
       function parseCSVString(csvText) {
           const arr = [];
@@ -2590,7 +2625,8 @@
       }
 
       async function fetchPesertaCSV() {
-          const csvUrl = document.getElementById('settingStudentCsvUrl').value || db.settings.studentCsvUrl;
+          const csvInput = document.getElementById('settingStudentCsvUrl');
+          const csvUrl = (csvInput ? csvInput.value : '') || db.settings.studentCsvUrl;
           if(!csvUrl) return;
           try {
               showToast('Mengunduh data Peserta dari Spreadsheet...');
@@ -2646,7 +2682,8 @@
       }
 
       async function fetchGuruCSV() {
-          const csvUrl = document.getElementById('settingGuruCsvUrl').value || db.settings.guruCsvUrl;
+          const csvInput = document.getElementById('settingGuruCsvUrl');
+          const csvUrl = (csvInput ? csvInput.value : '') || db.settings.guruCsvUrl;
           if(!csvUrl) return;
           try {
               showToast('Mengunduh data Guru & Pegawai...');
@@ -2681,13 +2718,13 @@
                   const roleMap = {};
                   db.teachers.forEach(t => { 
                       if (t.nama) {
-                          const key = t.nama.trim().toUpperCase();
+                          const key = (t.kode && t.kode.trim() !== '-') ? t.kode.trim() : t.nama.trim().toUpperCase();
                           if (t.photoUrl) photoMap[key] = t.photoUrl; 
                           if (t.role) roleMap[key] = t.role;
                       }
                   });
                   newData.forEach(t => { 
-                      const key = (t.nama || '').trim().toUpperCase();
+                      const key = (t.kode && t.kode.trim() !== '-') ? t.kode.trim() : (t.nama || '').trim().toUpperCase();
                       if (photoMap[key]) t.photoUrl = photoMap[key];
                       // Hanya gunakan peran lokal jika di CSV Kolom M kosong
                       if (!t.role && roleMap[key]) t.role = roleMap[key]; 
@@ -4048,20 +4085,23 @@
       }
 
       function renderPengaturan() {
-          document.getElementById('settingGasUrl').value = db.settings.gasUrl || '';
-          document.getElementById('settingSheetId').value = db.settings.sheetId || '';
-          document.getElementById('settingFolderId').value = db.settings.folderId || '';
-          document.getElementById('settingFolderQrId').value = db.settings.folderQrId || '1lIeXVQ-TlrYDy2d4eWnaje85m9d6Uw3Q';
-          document.getElementById('settingStudentCsvUrl').value = db.settings.studentCsvUrl || '';
-          document.getElementById('settingGuruCsvUrl').value = db.settings.guruCsvUrl || '';
-          document.getElementById('profNamaInput').value = db.settings.nama || '';
-          document.getElementById('profAlamatInput').value = db.settings.alamat || '';
-          document.getElementById('settingTahunAjaran').value = db.settings.tahunAjaran || '';
-          document.getElementById('profKepsekInput').value = db.settings.kepsek || '';
-          document.getElementById('profNipInput').value = db.settings.nip || '';
-          document.getElementById('settingLogoKiriUrl').value = db.settings.logoKiriUrl || db.settings.logoUrl || '';
-          document.getElementById('settingLogoKananUrl').value = db.settings.logoKananUrl || '';
-          document.getElementById('settingRunningText').value = db.settings.runningText || '';
+          const setVal = (id, val) => { const el = document.getElementById(id); if(el) el.value = val; };
+          setVal('settingGasUrl', db.settings.gasUrl || '');
+          setVal('settingSheetId', db.settings.sheetId || '');
+          setVal('settingFolderId', db.settings.folderId || '');
+          setVal('settingFolderQrId', db.settings.folderQrId || '1lIeXVQ-TlrYDy2d4eWnaje85m9d6Uw3Q');
+          setVal('settingStudentCsvUrl', db.settings.studentCsvUrl || '');
+          setVal('settingGuruCsvUrl', db.settings.guruCsvUrl || '');
+          setVal('profNamaInput', db.settings.nama || '');
+          setVal('profAlamatInput', db.settings.alamat || '');
+          setVal('settingTahunAjaran', db.settings.tahunAjaran || '');
+          setVal('profKepsekInput', db.settings.kepsek || '');
+          setVal('profNipInput', db.settings.nip || '');
+          setVal('settingLogoKiriUrl', db.settings.logoKiriUrl || db.settings.logoUrl || '');
+          setVal('settingLogoKananUrl', db.settings.logoKananUrl || '');
+          setVal('settingRunningText', db.settings.runningText || '');
+          const autoSyncEl = document.getElementById('settingAutoSync');
+          if(autoSyncEl) autoSyncEl.checked = db.settings.autoSyncCloud !== false;
           
           let html = '';
           db.teachers.forEach((t, i) => {
@@ -5090,21 +5130,36 @@
           this.value = '';
       });
 
-      document.getElementById('btnSaveSettings')?.addEventListener('click', () => {
-          db.settings.gasUrl = document.getElementById('settingGasUrl').value;
-          db.settings.sheetId = document.getElementById('settingSheetId').value;
-          db.settings.folderId = document.getElementById('settingFolderId').value;
-          db.settings.folderQrId = document.getElementById('settingFolderQrId').value;
-          db.settings.studentCsvUrl = document.getElementById('settingStudentCsvUrl').value;
-          db.settings.guruCsvUrl = document.getElementById('settingGuruCsvUrl').value;
-          db.settings.nama = document.getElementById('profNamaInput').value;
-          db.settings.alamat = document.getElementById('profAlamatInput').value;
-          db.settings.tahunAjaran = document.getElementById('settingTahunAjaran').value;
-          db.settings.kepsek = document.getElementById('profKepsekInput').value;
-          db.settings.nip = document.getElementById('profNipInput').value;
-          db.settings.logoKiriUrl = document.getElementById('settingLogoKiriUrl').value;
-          db.settings.logoKananUrl = document.getElementById('settingLogoKananUrl').value;
-          db.settings.runningText = document.getElementById('settingRunningText').value;
+      document.getElementById('btnSaveSettings')?.addEventListener('click', async () => {
+          const oldGasUrl = db.settings.gasUrl;
+          const newGasUrl = document.getElementById('settingGasUrl')?.value;
+          
+          if(newGasUrl !== undefined) db.settings.gasUrl = newGasUrl;
+          if(document.getElementById('settingSheetId')) db.settings.sheetId = document.getElementById('settingSheetId').value;
+          if(document.getElementById('settingFolderId')) db.settings.folderId = document.getElementById('settingFolderId').value;
+          if(document.getElementById('settingFolderQrId')) db.settings.folderQrId = document.getElementById('settingFolderQrId').value;
+          if(document.getElementById('settingStudentCsvUrl')) db.settings.studentCsvUrl = document.getElementById('settingStudentCsvUrl').value;
+          if(document.getElementById('settingGuruCsvUrl')) db.settings.guruCsvUrl = document.getElementById('settingGuruCsvUrl').value;
+          if(document.getElementById('profNamaInput')) db.settings.nama = document.getElementById('profNamaInput').value;
+          if(document.getElementById('profAlamatInput')) db.settings.alamat = document.getElementById('profAlamatInput').value;
+          if(document.getElementById('settingTahunAjaran')) db.settings.tahunAjaran = document.getElementById('settingTahunAjaran').value;
+          if(document.getElementById('profKepsekInput')) db.settings.kepsek = document.getElementById('profKepsekInput').value;
+          if(document.getElementById('profNipInput')) db.settings.nip = document.getElementById('profNipInput').value;
+          if(document.getElementById('settingLogoKiriUrl')) db.settings.logoKiriUrl = document.getElementById('settingLogoKiriUrl').value;
+          if(document.getElementById('settingLogoKananUrl')) db.settings.logoKananUrl = document.getElementById('settingLogoKananUrl').value;
+          if(document.getElementById('settingRunningText')) db.settings.runningText = document.getElementById('settingRunningText').value;
+          const autoSyncEl = document.getElementById('settingAutoSync');
+          if(autoSyncEl) db.settings.autoSyncCloud = autoSyncEl.checked;
+
+          // PENCEGAHAN TIMPA DATA (OVERWRITE PREVENTION)
+          // Jika URL GAS berubah (artinya di-paste dari komputer lama ke baru),
+          // JANGAN langsung simpan. Tarik (pull) datanya terlebih dahulu!
+          if (newGasUrl && newGasUrl !== oldGasUrl) {
+              showToast('URL GAS baru terdeteksi. Menarik data lama Anda dari Cloud...');
+              await fetchRealtimeGasData(true); 
+              return; 
+          }
+
           saveData(); 
           showToast('Pengaturan berhasil disimpan ke Cloud & Browser!');
       });
@@ -6203,13 +6258,28 @@
       fetchMessagesCSV();
       
       // Sinkronisasi otomatis dari GAS untuk memulihkan foto/data yang tersimpan di cloud
-      if (db.settings.gasUrl) {
+      if (db.settings.gasUrl && db.settings.autoSyncCloud !== false) {
+          // Menampilkan layar loading sinkronisasi awal
+          const syncOverlay = document.createElement('div');
+          syncOverlay.id = 'startupSyncOverlay';
+          syncOverlay.style = 'position:fixed; inset:0; background:var(--bg); z-index:99999; display:flex; flex-direction:column; align-items:center; justify-content:center; transition:opacity 0.5s ease;';
+          syncOverlay.innerHTML = `
+              <div style="font-size:3rem; animation: pulseGlow 1s infinite alternate;">☁️</div>
+              <div style="margin-top:1rem; font-weight:900; font-size:1.2rem; color:var(--primary);">Sinkronisasi Data Cloud...</div>
+              <div style="font-size:0.85rem; color:var(--text-light); margin-top:6px; font-weight:600;">Memastikan semua data sama dengan server</div>
+          `;
+          document.body.appendChild(syncOverlay);
+
           fetchRealtimeGasData(false).then(() => {
               if (db.students.length <= 2) fetchPesertaCSV();
               if (db.teachers.length <= 2) fetchGuruCSV();
+              setTimeout(() => {
+                  syncOverlay.style.opacity = '0';
+                  setTimeout(() => syncOverlay.remove(), 500);
+              }, 600);
           });
       } else {
-          // Auto-tarik data jika data siswa/guru masih kosong (hanya data sampel bawaan)
+          // Auto-tarik data CSV jika data siswa/guru masih kosong (hanya data sampel bawaan)
           if (db.students.length <= 2) fetchPesertaCSV();
           if (db.teachers.length <= 2) fetchGuruCSV();
       }
