@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SIM Asesmen Pintar — Terintegrasi Cloud & Offline</title>
+  <!-- Tambahkan library jsQR untuk Mesin Pemindai QR Code -->
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
   <!-- Baris ini ditambahkan untuk memancing panel Preview terbuka -->
   <style>
     :root {
@@ -69,7 +71,7 @@
     /* Tombol Navigasi Menu 3D & Berwarna */
     .nav-btn {
       appearance: none; font-family: inherit; font-size: 0.82rem; font-weight: 700;
-      padding: 0.55rem 0.9rem; border-radius: var(--radius-sm); cursor: pointer;
+      padding: 0.4rem 0.75rem; border-radius: var(--radius-sm); cursor: pointer;
       display: inline-flex; align-items: center; justify-content: center; text-align: center; gap: 0.45rem;
       flex: 1 1 auto; margin-bottom: 6px;
       
@@ -123,9 +125,9 @@
 
     @media (min-width: 900px) {
       .body-wrapper { flex-direction: row; }
-      .nav-bar { flex-direction: column; width: 260px; border-bottom: none; border-right: 1px solid var(--border); padding: 1.25rem 0.75rem; align-items: stretch; overflow-y: auto; flex-wrap: nowrap; justify-content: flex-start; }
-      .nav-btn { justify-content: flex-start; text-align: left; padding: 0.75rem 1rem; font-size: 0.85rem; margin-bottom: 8px; flex: none; }
-      .main-container { max-width: calc(100% - 260px); }
+      .nav-bar { flex-direction: column; width: 208px; border-bottom: none; border-right: 1px solid var(--border); padding: 1.25rem 0.75rem; align-items: stretch; overflow-y: auto; flex-wrap: nowrap; justify-content: flex-start; }
+      .nav-btn { justify-content: flex-start; text-align: left; padding: 0.5rem 0.8rem; font-size: 0.85rem; margin-bottom: 8px; flex: none; }
+      .main-container { max-width: calc(100% - 208px); }
     }
 
     .tab-section { display: none; animation: fadeIn 0.2s ease; }
@@ -136,7 +138,7 @@
     .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.25rem; }
     .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem; margin-bottom: 1.25rem; }
     .grid-sidebar { display: grid; grid-template-columns: 1fr; gap: 1.25rem; }
-    @media (min-width: 960px) { .grid-sidebar { grid-template-columns: 260px 1fr; } }
+    @media (min-width: 960px) { .grid-sidebar { grid-template-columns: 208px 1fr; } }
     .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.15rem; box-shadow: var(--shadow-sm); }
     .card-header { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem; margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border); }
     .card-title { font-size: 0.98rem; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 0.5rem; }
@@ -259,7 +261,7 @@
     .teacher-avatar:hover::after { content: '📷'; position: absolute; inset: 0; background: rgba(0,0,0,0.5); color: white; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
 
     /* Chatbox Sidebar */
-    .sidebar-chat { background: var(--surface-alt); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); margin-bottom: 1rem; display: flex; flex-direction: column; flex-shrink: 0; width: 100%; max-height: 35vh; min-height: 150px; overflow: hidden; box-shadow: var(--shadow-sm); }
+    .sidebar-chat { background: var(--surface-alt); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); margin-bottom: 1rem; display: flex; flex-direction: column; flex-shrink: 0; width: 100%; max-height: 35vh; min-height: 220px; overflow: hidden; box-shadow: var(--shadow-sm); }
     .chat-header { padding: 0.6rem; background: var(--primary-soft); border-bottom: 1px solid var(--border); font-size: 0.75rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 0.4rem; flex-shrink: 0; }
     .chat-messages { padding: 0.6rem; overflow-y: auto; display: flex; flex-direction: column; gap: 0.6rem; scrollbar-width: thin; flex: 1; }
     .chat-msg-item { background: var(--surface); border: 1px solid var(--border); padding: 0.5rem 0.6rem; border-radius: 6px; font-size: 0.72rem; line-height: 1.4; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
@@ -572,8 +574,8 @@
             </div>
             <!-- WADAH INFO WAKTU MUNDUR DAN TOKEN -->
             <div id="headerWaktuContainer" style="display:none; justify-content: space-between; align-items: center; background:rgba(255,255,255,0.1); border-radius:6px; padding:4px 10px; border: 1px solid rgba(255,255,255,0.2); font-size: 0.8rem; color: #fff;">
-                <div style="font-weight: bold; color: #facc15; white-space: nowrap;">⏳ Sisa Waktu: <span id="headerSisaWaktu" style="font-size:0.9rem;">-</span> Menit</div>
-                <div id="headerWaktuPesan" style="font-style: italic; color: #bfdbfe; font-size: 0.75rem; text-align:center; flex:1; padding: 0 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></div>
+                <div style="font-weight: bold; color: #facc15; white-space: nowrap;">⏳ Sisa Waktu: <span id="headerSisaWaktu" style="font-size:0.9rem;">-</span></div>
+                <marquee id="headerWaktuPesan" style="font-style: italic; color: #bfdbfe; font-size: 0.75rem; text-align:center; flex:1; padding: 0 10px;"></marquee>
                 <div style="font-weight: bold; color: #4ade80; white-space: nowrap; background: rgba(0,0,0,0.25); padding: 2px 8px; border-radius: 4px;">TOKEN: <span id="headerTokenString" style="letter-spacing: 1px;">***</span></div>
             </div>
         </div>
@@ -595,7 +597,7 @@
         <!-- SIDEBAR SOAL PANEL -->
         <div id="sidebarSoalContainer" class="no-print" style="display:none; margin-bottom: 0.75rem; width: 100%;"></div>
 
-        <button type="button" class="btn no-print" id="btnCallPanitia" style="background:#ef4444; color:#fff; border:none; font-weight:800; text-shadow:0 1px 2px rgba(0,0,0,0.3); flex-shrink: 0; padding: 0.75rem 1rem; justify-content: center; border-radius: var(--radius-sm); margin: 0 0.5rem 0 0; min-width: 140px; font-size: 0.85rem; transition: background 0.2s;">📞 Call Panitia</button>
+        <button type="button" class="btn no-print" id="btnCallPanitia" style="background:#ef4444; color:#fff; border:none; font-weight:800; text-shadow:0 1px 2px rgba(0,0,0,0.3); flex-shrink: 0; padding: 0.5rem 0.8rem; justify-content: center; border-radius: var(--radius-sm); margin: 0 0.5rem 0 0; min-width: 140px; font-size: 0.85rem; transition: background 0.2s;">📞 Call Panitia</button>
 
         <!-- Chatbox Sidebar -->
         <div id="sidebarChatBox" class="sidebar-chat no-print" style="display:none;">
@@ -610,7 +612,8 @@
         <button type="button" class="nav-btn" data-tab="tab-galeri-asesmen" style="--btn-color-light: #fbcfe8; --btn-color-main: #ec4899; --btn-color-dark: #be185d;">🖼️ Galeri Asesmen</button>
         <button type="button" class="nav-btn" data-tab="tab-buku-induk">📘 Peserta Asesmen</button>
         <button type="button" class="nav-btn" data-tab="tab-jadwal-view">📅 Jadwal Asesmen</button>
-        <button type="button" class="nav-btn" data-tab="tab-panitia">👔 Panitia</button>
+        <button type="button" class="nav-btn" data-tab="tab-kartu-pengawas" style="--btn-color-light: #fba11b; --btn-color-main: #f59e0b; --btn-color-dark: #d97706;">🪪 Kartu Pengawas</button>
+        <button type="button" class="nav-btn" data-tab="tab-panitia">🪪 Kartu Panitia</button>
 
         <button type="button" class="nav-btn" id="btnToggleAdm" style="--btn-color-light: #6366f1; --btn-color-main: #4f46e5; --btn-color-dark: #3730a3; width: 100%; flex: 1 1 100%;">🗂️ ADM ASESMEN ▾</button>
         <button type="button" class="nav-btn adm-btn" data-tab="tab-kartu-view" style="display:none;">🪪 Kartu Meja</button>
@@ -1215,7 +1218,10 @@
               <div class="card-title">📘 Data Peserta Asesmen</div>
               <div class="card-subtitle">Terhubung langsung ke Google Spreadsheet. Klik sinkronisasi untuk memuat ulang data terbaru.</div>
             </div>
-            <button type="button" class="btn btn-primary btn-sm" id="btnSyncCSV">🔄 Sinkron Data Spreadsheet</button>
+            <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                <button type="button" class="btn btn-primary btn-sm" id="btnSyncCSV">🔄 Sinkron Data Spreadsheet</button>
+                <button type="button" class="btn btn-success btn-sm" id="btnForceSaveStudents" title="Simpan paksa ke Cloud secara manual">💾 Simpan & Sinkronkan</button>
+            </div>
           </div>
           
           <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; margin-bottom: 1rem; gap:1rem; padding: 1rem; background: var(--surface-alt); border-radius: var(--radius-sm); border: 1px solid var(--border);">
@@ -1289,6 +1295,39 @@
             <h4 style="font-size:0.85rem; margin-top: 1.25rem; margin-bottom:0.5rem;">👨‍🏫 Pengawas Cadangan per Sesi:</h4>
             <div id="jadwalViewCadangan" style="font-size: 0.75rem; color: var(--text-muted);"></div>
           </div>
+        </div>
+      </section>
+
+      <!-- TAB: KARTU PENGAWAS ASESMEN -->
+      <section id="tab-kartu-pengawas" class="tab-section">
+        <div class="card no-print" style="margin-bottom:1.25rem;">
+          <div class="card-header">
+            <div>
+              <div class="card-title">🪪 Kartu Pengawas Asesmen</div>
+              <div class="card-subtitle">Cetak kartu identitas dan resume jadwal tugas otomatis untuk para Pengawas.</div>
+            </div>
+            <button type="button" class="btn btn-primary btn-sm" id="btnCetakKartuPengawas">🖨️ Cetak Kartu (A4)</button>
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Orientasi Kertas A4</label>
+              <select id="printOrienKartuPengawas" class="form-control">
+                <option value="portrait">Portrait</option>
+                <option value="landscape">Landscape</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Skala Cetak (%)</label>
+              <input type="number" id="printScaleKartuPengawas" class="form-control" value="100" min="50" max="150" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Kartu per Halaman A4</label>
+              <input type="number" id="perPageKartuPengawas" class="form-control" value="8" min="1" max="20" />
+            </div>
+          </div>
+        </div>
+        <div class="a4-scroll-wrapper">
+          <div id="cardsContainerPengawasGrid" style="display:flex; flex-direction:column; gap:20px; width:100%; align-items:center;"></div>
         </div>
       </section>
 
@@ -1388,8 +1427,8 @@
         <div class="card">
           <div class="card-header" style="border-bottom: none; margin-bottom: 0;">
             <div>
-              <div class="card-title">👔 Kepanitiaan Asesmen</div>
-              <div class="card-subtitle">Daftar Panitia ditarik otomatis dari Sumber Data CSV (Kolom M). Klik kotak profil untuk melihat detail info.</div>
+              <div class="card-title">🪪 Kartu Kepanitiaan Asesmen</div>
+              <div class="card-subtitle">Daftar Panitia ditarik otomatis dari Sumber Data CSV (Kolom M). Klik kotak kartu untuk melihat profil & rincian tugas.</div>
             </div>
           </div>
           
@@ -1556,8 +1595,12 @@
               <input type="text" id="waktuTokenString" class="form-control" placeholder="Contoh: AB12CD" style="font-weight:bold; letter-spacing:1px;" />
             </div>
             <div class="form-group" style="grid-column: 1 / -1;">
-              <label class="form-label">Pesan Tambahan dari Panitia</label>
-              <input type="text" id="waktuPesan" class="form-control" placeholder="Tuliskan pesan penyemangat atau peringatan (Tampil di Header)..." />
+              <label class="form-label">Teks Berjalan 1 (Header Utama)</label>
+              <input type="text" id="settingRunningText" class="form-control" placeholder="Masukkan teks pengumuman/informasi utama..." />
+            </div>
+            <div class="form-group" style="grid-column: 1 / -1;">
+              <label class="form-label">Teks Berjalan 2 (Pesan Tambahan dari Panitia)</label>
+              <input type="text" id="waktuPesan" class="form-control" placeholder="Tuliskan pesan penyemangat atau peringatan (Tampil di panel waktu)..." />
             </div>
           </div>
           <div style="display:flex; gap:0.75rem; margin-top:1.25rem;">
@@ -1604,6 +1647,11 @@
                   <span style="font-size: 4rem; margin-bottom: 0.5rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));">📂</span>
                   <span style="font-size: 1.3rem; font-weight: 900; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">BANK SOAL KELAS 9</span>
               </a>
+
+              <a href="https://drive.google.com/drive/folders/1mXDkZrk3Its4KGgTna658K9olU_QRax1" target="_blank" class="link-box-3d" style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); box-shadow: 0 8px 0 #1e3a8a, 0 10px 15px rgba(0,0,0,0.15); color: #fff; text-decoration: none; display: flex; flex-direction: column; align-items: center; padding: 2.5rem 1rem;">
+                  <span style="font-size: 4rem; margin-bottom: 0.5rem; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));">🖼️</span>
+                  <span style="font-size: 1.15rem; font-weight: 900; letter-spacing: 1px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); text-align: center;">BANK FOTO SISWA & GURU</span>
+              </a>
           </div>
         </div>
       </section>
@@ -1620,8 +1668,15 @@
           </div>
           <div class="form-grid">
             <div class="form-group" style="grid-column: 1 / -1; margin-top:0.5rem;">
-                <label class="form-label" style="font-weight:800; color:var(--primary); border-bottom: 2px dashed var(--border); padding-bottom: 6px;">📹 LINK CCTV / LIVE STREAMING (YouTube URL)</label>
-                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Gunakan link video/live streaming YouTube. Anda juga dapat mengubah nama tampilan layar CCTV-nya di kolom nama.</div>
+                <label class="form-label" style="font-weight:800; color:var(--primary); border-bottom: 2px dashed var(--border); padding-bottom: 6px;">📹 LINK CCTV / LIVE STREAMING (YouTube URL atau Kamera Lokal)</label>
+                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px; line-height:1.4;">Gunakan link video/live streaming YouTube.<br>Ketik <strong>WEBCAM</strong> pada tautan jika ingin menggunakan kamera lokal laptop/PC biasa.<br>Ketik <strong>SCANNER</strong> jika ingin menjadikan kamera tersebut sebagai Alat Pindai QR Code.</div>
+                <div style="margin-top: 10px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); padding: 8px 12px; border-radius: 6px;">
+                    <label style="display:flex; align-items:center; gap: 8px; font-size: 0.8rem; cursor: pointer; color: var(--text);">
+                        <input type="checkbox" id="settingWebcamEnabled" style="width: 1.1rem; height: 1.1rem; cursor: pointer;" />
+                        <strong>Aktifkan Kamera Lokal (Webcam / Scanner)</strong>
+                    </label>
+                    <div style="font-size:0.7rem; color:var(--text-muted); margin-left: 26px; margin-top: 2px;">Jika tidak dicentang, kamera lokal dimatikan secara default demi privasi & hemat resource.</div>
+                </div>
             </div>
             <div class="form-group">
               <label class="form-label">CCTV 1</label>
@@ -1746,15 +1801,20 @@
                         <input type="time" id="setJadwalS2Start" class="form-control" /> - <input type="time" id="setJadwalS2End" class="form-control" />
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" id="groupSetJadwalRest2">
                     <label class="form-label">Waktu Istirahat 2</label>
                     <div style="display:flex; gap:0.5rem; align-items:center;">
                         <input type="time" id="setJadwalRest2Start" class="form-control" /> - <input type="time" id="setJadwalRest2End" class="form-control" />
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Waktu Sesi 3</label>
-                    <div style="display:flex; gap:0.5rem; align-items:center;">
+                <div class="form-group" id="groupSetJadwalS3">
+                    <label class="form-label" style="display:flex; justify-content:space-between; align-items:center;">
+                        Waktu Sesi 3
+                        <label id="lblToggleSesi3" style="display:flex; align-items:center; gap:4px; cursor:pointer; font-weight:800; color:#1d4ed8; background:#e0f2fe; padding:2px 8px; border-radius:4px; border:1px solid #bfdbfe; font-size:0.75rem; transition:all 0.2s;" title="Centang untuk mengaktifkan Sesi 3">
+                            <input type="checkbox" id="setJadwalSesi3Aktif" checked style="cursor:pointer;" /> <span id="textToggleSesi3">Aktif</span>
+                        </label>
+                    </label>
+                    <div id="waktuSesi3Inputs" style="display:flex; gap:0.5rem; align-items:center; transition: opacity 0.3s;">
                         <input type="time" id="setJadwalS3Start" class="form-control" /> - <input type="time" id="setJadwalS3End" class="form-control" />
                     </div>
                 </div>
@@ -1853,8 +1913,8 @@
                 <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
                     <input type="text" id="settingGuruCsvUrl" class="form-control" style="min-width:200px; flex:1;" />
                     <button class="btn btn-primary" id="btnSyncGuru">🔄 Sinkron CSV</button>
-                    <button class="btn btn-success" id="btnSavePeranGuru">💾 Simpan Peran</button>
-                    <button type="button" class="btn btn-primary" id="btnGenerateJadwal">🎲 Buat / Acak Ulang Jadwal</button>
+                    <button class="btn btn-success" id="btnSavePeranGuru">💾 Simpan Peran & Foto</button>
+                    <button type="button" class="btn btn-primary" id="btnGenerateJadwal" style="display:none;">🎲 Buat / Acak Ulang Jadwal</button>
                 </div>
             </div>
             <div class="table-wrap" style="margin-top:1rem; max-height: 400px; overflow-y: auto;">
@@ -2009,8 +2069,8 @@
   <div class="modal-backdrop" id="modalCctv" style="z-index: 9999; background: rgba(0,0,0,0.9); backdrop-filter: blur(8px);">
     <div style="position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem;">
       <h3 id="cctvModalTitle" style="color: #38bdf8; margin-bottom: 1rem; text-transform: uppercase; font-weight: 900; letter-spacing: 1px; text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);">📹 CCTV</h3>
-      <div id="cctvModalContent" style="position: relative; width: 90vw; height: 75vh; max-width: 1000px; background: #000; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 2px solid rgba(56, 189, 248, 0.5); overflow: hidden; animation: zoomInBounce 0.4s ease;">
-          <!-- iframe dimuat di sini -->
+      <div id="cctvModalContent" style="position: relative; width: 90vw; height: 75vh; max-width: 1000px; background: #000; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); border: 2px solid rgba(56, 189, 248, 0.5); overflow: hidden; animation: zoomInBounce 0.4s ease; display:flex; justify-content:center; align-items:center;">
+          <!-- iframe atau video dimuat di sini -->
       </div>
       <div style="margin-top: 1.5rem; display: flex; z-index: 10000; justify-content: center;">
           <button id="btnCloseCctv" class="btn" style="background: rgba(239, 68, 68, 0.9); border: 1px solid rgba(255,255,255,0.3); color: #fff; font-size: 1rem; padding: 0.75rem 1.5rem; border-radius: 50px; backdrop-filter: blur(5px); transition: all 0.3s; box-shadow: 0 4px 10px rgba(239,68,68,0.3); cursor: pointer;">✕ Tutup CCTV (Kembali Silent)</button>
@@ -2132,6 +2192,29 @@
         };
       }
 
+      function formatDriveUrl(url) {
+          if (!url) return '';
+          if (typeof url !== 'string') return url;
+          url = url.trim();
+          
+          let fileId = '';
+          // Ekstrak ID unik secara cerdas dari berbagai format link Google Drive
+          if (url.includes('/d/')) {
+              const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+              if (match && match[1]) fileId = match[1];
+          } else if (url.includes('id=')) {
+              const match = url.match(/id=([a-zA-Z0-9_-]+)/);
+              if (match && match[1]) fileId = match[1];
+          }
+          
+          if (fileId) {
+              // MENGGUNAKAN ENDPOINT THUMBNAIL (Jalur khusus web agar tidak diblokir Google)
+              return `https://drive.google.com/thumbnail?id=${fileId}&sz=w800`;
+          }
+          
+          return url;
+      }
+
       let db = loadData();
 
       function loadData() {
@@ -2148,6 +2231,20 @@
               if (!parsed.settings.guruCsvUrl) parsed.settings.guruCsvUrl = defaultDb.settings.guruCsvUrl;
               if (!parsed.settings.linksExtra) parsed.settings.linksExtra = defaultDb.settings.linksExtra;
               
+              // PROTEKSI URL GAMBAR: Format ulang semua link Drive otomatis saat dimuat dari Database
+              if (parsed.students) {
+                  parsed.students.forEach(s => {
+                      if(s.photoUrl) s.photoUrl = formatDriveUrl(s.photoUrl);
+                      if(s.qrUrl) s.qrUrl = formatDriveUrl(s.qrUrl);
+                  });
+              }
+              if (parsed.teachers) {
+                  parsed.teachers.forEach(t => {
+                      if(t.photoUrl) t.photoUrl = formatDriveUrl(t.photoUrl);
+                      if(t.photo_csv) t.photo_csv = formatDriveUrl(t.photo_csv);
+                  });
+              }
+
               return parsed;
           }
         } catch (err) {}
@@ -2515,8 +2612,27 @@
           document.getElementById('modalCctv').classList.add('open');
       };
       
+      window.openCctvFullscreenWebcam = function(videoElId, title) {
+          const content = document.getElementById('cctvModalContent');
+          document.getElementById('cctvModalTitle').textContent = '📹 ' + title;
+          
+          // Kloning aliran stream dari webcam dashboard
+          const sourceVid = document.getElementById(videoElId);
+          if (sourceVid && sourceVid.srcObject) {
+              content.innerHTML = `<video autoplay playsinline style="width:100%; height:100%; object-fit:contain;"></video>`;
+              const modalVid = content.querySelector('video');
+              modalVid.srcObject = sourceVid.srcObject;
+          } else {
+              content.innerHTML = `<div style="color:red; font-weight:bold;">Kamera Tidak Tersedia</div>`;
+          }
+          document.getElementById('modalCctv').classList.add('open');
+      };
+      
       document.getElementById('btnCloseCctv')?.addEventListener('click', () => {
-          document.getElementById('cctvModalContent').innerHTML = ''; // Hentikan video dan audio saat ditutup
+          const content = document.getElementById('cctvModalContent');
+          const vid = content.querySelector('video');
+          if (vid) vid.srcObject = null; // Lepaskan binding stream dari modal
+          content.innerHTML = ''; // Hentikan video dan audio saat ditutup
           document.getElementById('modalCctv').classList.remove('open');
       });
 
@@ -2569,8 +2685,8 @@
                               db.students.forEach(s => {
                                   const mapS = cloudData.photoMapping.students[s.id];
                                   if (mapS) {
-                                      if(mapS.p) s.photoUrl = mapS.p;
-                                      if(mapS.q) s.qrUrl = mapS.q;
+                                      if(mapS.p) s.photoUrl = formatDriveUrl(mapS.p);
+                                      if(mapS.q) s.qrUrl = formatDriveUrl(mapS.q);
                                   }
                               });
                           }
@@ -2579,7 +2695,7 @@
                                   const tKey = (t.kode && t.kode.trim() !== '-') ? t.kode.trim() : (t.nama || '').trim().toUpperCase();
                                   const mapT = cloudData.photoMapping.teachers[tKey];
                                   if (mapT) {
-                                      if (mapT.p) t.photoUrl = mapT.p;
+                                      if (mapT.p) t.photoUrl = formatDriveUrl(mapT.p);
                                       if (mapT.r) t.role = mapT.r;
                                   }
                               });
@@ -2624,12 +2740,12 @@
           return arr;
       }
 
-      async function fetchPesertaCSV() {
+      async function fetchPesertaCSV(isSilent = false) {
           const csvInput = document.getElementById('settingStudentCsvUrl');
           const csvUrl = (csvInput ? csvInput.value : '') || db.settings.studentCsvUrl;
           if(!csvUrl) return;
           try {
-              showToast('Mengunduh data Peserta dari Spreadsheet...');
+              if(!isSilent) showToast('Mengunduh data Peserta dari Spreadsheet...');
               const response = await fetch(csvUrl);
               const csvText = await response.text();
               const arr = parseCSVString(csvText);
@@ -2638,7 +2754,13 @@
                   const newData = [];
                   for (let i = 1; i < arr.length; i++) {
                       let r = arr[i];
-                      if (!r[2]) continue;
+                      if (!r || !r[2]) continue;
+                      
+                      // Mengambil dari BW2 ke bawah secara presisi (Kolom BW = index 74, Kolom BX = index 75)
+                      // Dilindungi dengan r.length agar tidak error jika sel sebelahnya kosong
+                      let rawPhotoUrl = r.length > 74 ? r[74] : '';
+                      let rawQrUrl = r.length > 75 ? r[75] : '';
+                      
                       newData.push({
                           id: 'S' + i,
                           no_asesmen: r[72] || '-',
@@ -2653,8 +2775,8 @@
                           tempat_lahir: r[11] || '-',
                           tgl_lahir: r[12] || '-',
                           ruang: r[73] || '-',
-                          photoUrl: '',
-                          qrUrl: ''
+                          photoUrl: formatDriveUrl(rawPhotoUrl), // Foto siswa dari kolom BW
+                          qrUrl: formatDriveUrl(rawQrUrl)       // QR Code siswa dari kolom BX
                       });
                   }
                   
@@ -2666,27 +2788,34 @@
                   });
                   newData.forEach(s => {
                       const key = (s.nisn || s.nis || s.nama).trim().toUpperCase();
-                      if (photoMap[key]) s.photoUrl = photoMap[key];
-                      if (qrMap[key]) s.qrUrl = qrMap[key];
+                      // Prioritaskan link baru dari CSV kolom BW & BX, fallback ke memori jika kosong
+                      if (!s.photoUrl && photoMap[key]) s.photoUrl = photoMap[key];
+                      if (!s.qrUrl && qrMap[key]) s.qrUrl = qrMap[key];
                   });
 
                   db.students = newData;
                   db.settings.studentCsvUrl = csvUrl;
                   saveData();
-                  showToast(`Berhasil menyinkronkan ${newData.length} Peserta Asesmen!`);
+                  
+                  // Segarkan tampilan antarmuka secara instan
+                  renderBukuInduk();
+                  renderCardsGrid();
+                  renderDenah();
+                  
+                  if(!isSilent) showToast(`Berhasil menyinkronkan ${newData.length} Peserta Asesmen dengan Foto (BW) & QR (BX)!`);
               }
           } catch (e) {
               console.error(e);
-              showToast('Gagal memuat CSV Peserta.');
+              if(!isSilent) showToast('Gagal memuat CSV Peserta.');
           }
       }
 
-      async function fetchGuruCSV() {
+      async function fetchGuruCSV(isSilent = false) {
           const csvInput = document.getElementById('settingGuruCsvUrl');
           const csvUrl = (csvInput ? csvInput.value : '') || db.settings.guruCsvUrl;
           if(!csvUrl) return;
           try {
-              showToast('Mengunduh data Guru & Pegawai...');
+              if(!isSilent) showToast('Mengunduh data Guru & Pegawai...');
               const response = await fetch(csvUrl);
               const csvText = await response.text();
               const arr = parseCSVString(csvText);
@@ -2695,7 +2824,11 @@
                   const newData = [];
                   for (let i = 1; i < arr.length; i++) {
                       let r = arr[i];
-                      if (!r[3]) continue;
+                      if (!r || !r[3]) continue;
+                      
+                      // Mengambil link foto dari Kolom Q (index 16) atau R (index 17) sebagai cadangan
+                      let rawPhotoCsv = r.length > 16 ? r[16] : (r.length > 17 ? r[17] : '');
+                      
                       newData.push({
                           kode: r[0] || '-',
                           nip: r[2] || '-',
@@ -2705,12 +2838,12 @@
                           tugas1: r[8] || '-',
                           tugas2: r[9] || '-',
                           tugas3: r[10] || '-',
-                          role: (r[12] || '').trim().toUpperCase(), // Prioritas Peran dari Kolom M
-                          password: (r[13] || '').trim(), // Prioritas Sandi dari Kolom N
-                          kepanitiaan: r[14] || '-', // Kolom O
-                          uraian_tugas: r[15] || '-', // Kolom P (Dikembalikan ke Kolom P)
-                          photo_csv: r[16] || r[17] || '', // Kolom Q / R (Auto-fallback)
-                          raw: r // Menyimpan seluruh baris CSV untuk flashcard
+                          role: (r[12] || '').trim().toUpperCase(),
+                          password: (r[13] || '').trim(),
+                          kepanitiaan: r[14] || '-',
+                          uraian_tugas: r[15] || '-',
+                          photo_csv: formatDriveUrl(rawPhotoCsv),
+                          raw: r
                       });
                   }
                   
@@ -2725,7 +2858,9 @@
                   });
                   newData.forEach(t => { 
                       const key = (t.kode && t.kode.trim() !== '-') ? t.kode.trim() : (t.nama || '').trim().toUpperCase();
-                      if (photoMap[key]) t.photoUrl = photoMap[key];
+                      // Paksakan menggunakan link foto dari CSV (Kolom Q). Jika kosong, gunakan dari memori lama
+                      t.photoUrl = t.photo_csv ? t.photo_csv : (photoMap[key] || '');
+                      
                       // Hanya gunakan peran lokal jika di CSV Kolom M kosong
                       if (!t.role && roleMap[key]) t.role = roleMap[key]; 
                   });
@@ -2733,17 +2868,113 @@
                   db.teachers = newData;
                   db.settings.guruCsvUrl = csvUrl;
                   saveData();
-                  showToast(`Berhasil menyinkronkan ${newData.length} Data Guru!`);
+                  
+                  // Segarkan tampilan antarmuka secara instan
+                  renderPengaturan();
+                  renderPanitia();
+                  renderKartuPengawas();
+                  renderDashboard();
+                  
+                  if(!isSilent) showToast(`Berhasil menyinkronkan ${newData.length} Data Guru dengan Foto (Kolom Q)!`);
               }
           } catch (e) {
               console.error(e);
-              showToast('Gagal memuat CSV Guru.');
+              if(!isSilent) showToast('Gagal memuat CSV Guru.');
           }
       }
 
-      document.getElementById('btnSyncCSV')?.addEventListener('click', fetchPesertaCSV);
-      document.getElementById('btnSyncStudentCsv')?.addEventListener('click', fetchPesertaCSV);
-      document.getElementById('btnSyncGuru')?.addEventListener('click', fetchGuruCSV);
+      async function fetchNilaiCSV(isSilent = false) {
+          if(!db.settings.linksExtra) return;
+          const targetClasses = [7, 8, 9];
+          
+          for (let kelas of targetClasses) {
+              const csvUrls = db.settings.linksExtra[`nilaiCsv${kelas}`] || [];
+              const mapels = db.settings.links ? (db.settings.links[`kelas${kelas}`] || []) : [];
+              
+              let htmlContent = '';
+              let hasValidData = false;
+              
+              let totalSiswa = db.students.filter(s => {
+                  const kls = (s.kelas || '').toUpperCase();
+                  if (kelas === 7) return (kls.includes('VII') && !kls.includes('VIII')) || kls.startsWith('7');
+                  if (kelas === 8) return kls.includes('VIII') || kls.startsWith('8');
+                  if (kelas === 9) return kls.includes('IX') || kls.startsWith('9');
+                  return false;
+              }).length;
+              
+              for (let i = 0; i < 10; i++) {
+                  const url = csvUrls[i];
+                  const mapelName = mapels[i] ? mapels[i].mapel : `Mapel ${i+1}`;
+                  if (!mapelName) continue; 
+                  
+                  let avg = '-', max = '-', min = '-', count = 0;
+                  
+                  if (url && url.trim().startsWith('http')) {
+                      try {
+                          const res = await fetch(url + (url.includes('?') ? '&' : '?') + 't=' + new Date().getTime());
+                          if (res.ok) {
+                              const csvText = await res.text();
+                              const arr = parseCSVString(csvText);
+                              if (arr.length > 1) {
+                                  const header = arr[0].map(h => h.toLowerCase());
+                                  let scoreIdx = header.findIndex(h => h.includes('skor') || h.includes('score') || h.includes('nilai'));
+                                  if (scoreIdx === -1) {
+                                      scoreIdx = header.findIndex((h, idx) => arr[1] && arr[1][idx] && arr[1][idx].toString().includes('/'));
+                                  }
+                                  if (scoreIdx === -1) scoreIdx = header.length - 1; 
+                                  
+                                  let scores = [];
+                                  for(let r = 1; r < arr.length; r++) {
+                                      if(arr[r].length <= scoreIdx) continue;
+                                      let raw = arr[r][scoreIdx];
+                                      if(!raw) continue;
+                                      let num = raw.toString().split('/')[0].trim();
+                                      num = parseFloat(num.replace(',', '.'));
+                                      if (!isNaN(num)) scores.push(num);
+                                  }
+                                  
+                                  if (scores.length > 0) {
+                                      count = scores.length;
+                                      max = Math.max(...scores);
+                                      min = Math.min(...scores);
+                                      avg = (scores.reduce((a,b)=>a+b,0) / count).toFixed(1);
+                                      hasValidData = true;
+                                  }
+                              }
+                          }
+                      } catch(e) { console.warn('Error fetch Nilai CSV:', e); }
+                  }
+                  
+                  let avgNum = parseFloat(avg);
+                  let pct = isNaN(avgNum) ? 0 : (avgNum <= 100 ? avgNum : (avgNum/100));
+                  if (pct > 100) pct = 100;
+                  
+                  let isEmpty = count === 0;
+                  htmlContent += `
+                  <div class="nilai-card ${isEmpty ? 'empty' : ''}">
+                      <div class="nc-title">${mapelName}</div><div class="nc-count">${count}/${totalSiswa} siswa</div>
+                      <div class="nc-flex"><div><div class="nc-avg-label">Rata-rata</div><div class="nc-avg-val">${avg}</div></div><div class="nc-stats"><div class="nc-max">Max: ${max}</div><div class="nc-min">Min: ${min}</div></div></div>
+                      <div class="nc-bar-bg"><div class="nc-bar-fill" style="width: ${pct}%;"></div></div>
+                  </div>`;
+              }
+              
+              const container = document.getElementById(`content-kelas${kelas}`);
+              if (container) {
+                  if (hasValidData || htmlContent.trim() !== '') {
+                      container.innerHTML = htmlContent;
+                      container.classList.add('folder-content-grid');
+                  } else {
+                      container.innerHTML = `<div style="grid-column: 1/-1; padding: 3rem; text-align: center; color: #94a3b8; font-size: 0.9rem; font-style: italic;">Data nilai Kelas ${kelas} belum tersedia / tautan CSV belum diatur.</div>`;
+                      container.classList.remove('folder-content-grid');
+                  }
+              }
+          }
+          if(!isSilent) showToast('Data Nilai berhasil disinkronkan!');
+      }
+
+      document.getElementById('btnSyncCSV')?.addEventListener('click', () => fetchPesertaCSV(false));
+      document.getElementById('btnSyncStudentCsv')?.addEventListener('click', () => fetchPesertaCSV(false));
+      document.getElementById('btnSyncGuru')?.addEventListener('click', () => fetchGuruCSV(false));
 
       // ================= LOGIC WAKTU MUNDUR DAN TOKEN =================
       function updateHeaderWaktu() {
@@ -2756,17 +2987,20 @@
           document.getElementById('headerWaktuContainer').style.display = 'flex';
           const now = new Date().getTime();
           const elapsedMs = now - w.startTime;
-          const elapsedMinutes = Math.floor(elapsedMs / 60000);
-          const sisa = w.durasi - elapsedMinutes;
+          const sisaMs = (w.durasi * 60000) - elapsedMs;
           
           const sisaEl = document.getElementById('headerSisaWaktu');
-          if (sisa <= 0) {
+          if (sisaMs <= 0) {
               sisaEl.textContent = 'HABIS';
               sisaEl.style.color = '#ef4444';
           } else {
-              sisaEl.textContent = sisa;
+              const m = Math.floor(sisaMs / 60000);
+              const s = Math.floor((sisaMs % 60000) / 1000);
+              sisaEl.textContent = `${m} Menit ${s.toString().padStart(2, '0')} Detik`;
               sisaEl.style.color = '#facc15';
           }
+          
+          const elapsedMinutes = Math.floor(elapsedMs / 60000);
           
           // Token muncul setelah elapsedMinutes mencapai tokenTrigger
           if (elapsedMinutes >= w.tokenTrigger) {
@@ -2854,6 +3088,11 @@
           db.settings.waktu.tokenTrigger = parseInt(document.getElementById('waktuTokenTrigger').value) || 90;
           db.settings.waktu.tokenStr = document.getElementById('waktuTokenString').value || '';
           db.settings.waktu.pesan = document.getElementById('waktuPesan').value || '';
+          
+          db.settings.runningText = document.getElementById('settingRunningText').value || '';
+          const marquee = document.getElementById('headerMarquee');
+          if (marquee) marquee.textContent = db.settings.runningText || 'Selamat datang di Sistem Informasi dan Manajemen Asesmen Digital SMPN 2 Gelumbang. Akses portal utama =>> bit.ly/guruwali2glb <<=';
+
           db.settings.waktu.startTime = new Date().getTime();
           db.settings.waktu.isRunning = true;
           saveData();
@@ -2876,6 +3115,10 @@
           document.getElementById('waktuTokenTrigger').value = db.settings.waktu.tokenTrigger || 90;
           document.getElementById('waktuTokenString').value = db.settings.waktu.tokenStr || '';
           document.getElementById('waktuPesan').value = db.settings.waktu.pesan || '';
+          
+          const runTextEl = document.getElementById('settingRunningText');
+          if (runTextEl) runTextEl.value = db.settings.runningText || '';
+
           updateHeaderWaktu();
       }
 
@@ -3000,6 +3243,9 @@
           document.getElementById('linkCctv4').value = db.settings.linksExtra.cctv4 || '';
           document.getElementById('linkPresensiCsv').value = db.settings.linksExtra.presensiCsv || '';
           
+          const webcamCheck = document.getElementById('settingWebcamEnabled');
+          if(webcamCheck) webcamCheck.checked = db.settings.linksExtra.webcamEnabled === true;
+
           const buildNilaiTable = (kelas, dataArray, mapelData) => {
               let rows = '';
               for(let i=0; i<10; i++) {
@@ -3043,6 +3289,9 @@
           db.settings.linksExtra.cctv4 = document.getElementById('linkCctv4').value;
           db.settings.linksExtra.presensiCsv = document.getElementById('linkPresensiCsv').value;
           
+          const webcamCheck = document.getElementById('settingWebcamEnabled');
+          if(webcamCheck) db.settings.linksExtra.webcamEnabled = webcamCheck.checked;
+          
           if(!db.settings.linksExtra.nilaiCsv7) db.settings.linksExtra.nilaiCsv7 = Array(10).fill('');
           if(!db.settings.linksExtra.nilaiCsv8) db.settings.linksExtra.nilaiCsv8 = Array(10).fill('');
           if(!db.settings.linksExtra.nilaiCsv9) db.settings.linksExtra.nilaiCsv9 = Array(10).fill('');
@@ -3071,8 +3320,129 @@
               if(labelEl) labelEl.textContent = '📹 ' + (labelText || 'CCTV');
               
               if(!el) return;
-              if(url && url.includes('http')) {
-                  let videoId = '';
+              
+              let safeTitle = (labelText || 'CCTV').replace(/'/g, "\\'");
+              
+              if(url && url.trim().toUpperCase() === 'WEBCAM') {
+                  if (!db.settings.linksExtra.webcamEnabled) {
+                      el.innerHTML = `<span style="color:#f59e0b; font-size:0.75rem; font-weight:700; text-shadow: 0 0 5px orange;">⏸️ KAMERA OFF</span><div style="position:absolute; bottom:4px; right:4px; font-size:0.6rem; color:#fff; font-family:monospace; z-index:11;" class="cctv-time">00:00:00</div>`;
+                  } else {
+                      // MENGAKTIFKAN WEBCAM LOKAL
+                      el.innerHTML = `
+                          <video id="webcam_${id}" autoplay playsinline muted style="width:100%; height:100%; object-fit:cover; border-radius:0; transform: scaleX(-1);"></video>
+                          <div onclick="openCctvFullscreenWebcam('webcam_${id}', '${safeTitle}')" style="position:absolute; inset:0; z-index:10; cursor:pointer; background:rgba(0,0,0,0.01);" title="Klik untuk perbesar"></div>
+                          <div style="position:absolute; bottom:4px; right:4px; font-size:0.6rem; color:#fff; font-family:monospace; z-index:11; background:rgba(0,0,0,0.5); padding:2px 4px; border-radius:4px;" class="cctv-time">00:00:00</div>
+                      `;
+                      
+                      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                          navigator.mediaDevices.getUserMedia({ video: true })
+                              .then(stream => {
+                                  const vid = document.getElementById(`webcam_${id}`);
+                                  if(vid) vid.srcObject = stream;
+                              })
+                              .catch(err => {
+                                  el.innerHTML = `<span style="color:#ef4444; font-size:0.75rem; font-weight:700; animation: blinkRed 1s infinite; text-shadow: 0 0 5px red;">🔴 KAMERA DIBLOKIR / ERROR</span>`;
+                              });
+                      } else {
+                          el.innerHTML = `<span style="color:#ef4444; font-size:0.75rem; font-weight:700; text-shadow: 0 0 5px red;">🔴 BROWSER TIDAK MENDUKUNG</span>`;
+                      }
+                  }
+              } else if (url && url.trim().toUpperCase() === 'SCANNER') {
+                  if (!db.settings.linksExtra.webcamEnabled) {
+                      el.innerHTML = `<span style="color:#f59e0b; font-size:0.75rem; font-weight:700; text-shadow: 0 0 5px orange;">⏸️ SCANNER OFF</span><div style="position:absolute; bottom:4px; right:4px; font-size:0.6rem; color:#fff; font-family:monospace; z-index:11;" class="cctv-time">00:00:00</div>`;
+                  } else {
+                      // MENGAKTIFKAN WEBCAM SEBAGAI PEMINDAI QR CODE
+                      el.innerHTML = `
+                          <video id="scanner_${id}" autoplay playsinline muted style="width:100%; height:100%; object-fit:cover; border-radius:0; transform: scaleX(-1);"></video>
+                          <canvas id="canvas_${id}" style="display:none;"></canvas>
+                      <div onclick="openCctvFullscreenWebcam('scanner_${id}', '${safeTitle}')" style="position:absolute; inset:0; z-index:10; cursor:pointer; background:rgba(0,0,0,0.01);" title="Klik untuk perbesar"></div>
+                      <div style="position:absolute; bottom:4px; right:4px; font-size:0.6rem; color:#fff; font-family:monospace; z-index:11; background:rgba(0,0,0,0.5); padding:2px 4px; border-radius:4px;" class="cctv-time">00:00:00</div>
+                  `;
+                  
+                  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                      // Utamakan kamera belakang (environment) jika tersedia di tablet/HP
+                      navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+                          .then(stream => {
+                              const vid = document.getElementById(`scanner_${id}`);
+                              const canvas = document.getElementById(`canvas_${id}`);
+                              const resBox = document.getElementById(`scan_result_${id}`);
+                              
+                              if(vid) {
+                                  vid.srcObject = stream;
+                                  vid.setAttribute("playsinline", true);
+                                  
+                                  // PERBAIKAN: Menangani Promise pemutaran video agar tidak memicu AbortError
+                                  const playPromise = vid.play();
+                                  if (playPromise !== undefined) {
+                                      playPromise.catch(error => {
+                                          console.warn("Pemutaran kamera terinterupsi pemuatan ulang, diabaikan dengan aman.", error);
+                                      });
+                                  }
+                                  
+                                  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+                                  
+                                  // Mesin suara Beep
+                                  const playBeep = () => {
+                                      try {
+                                          const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                                          const osc = audioCtx.createOscillator();
+                                          const gainNode = audioCtx.createGain();
+                                          osc.connect(gainNode);
+                                          gainNode.connect(audioCtx.destination);
+                                          osc.type = 'sine';
+                                          osc.frequency.setValueAtTime(800, audioCtx.currentTime); // Nada Beep
+                                          gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime); // Volume
+                                          osc.start();
+                                          setTimeout(() => { osc.stop(); audioCtx.close(); }, 150);
+                                      } catch(e) {}
+                                  };
+
+                                  let lastScanned = "";
+                                  let scanTimeout = null;
+                                  
+                                  // Putaran mesin pemindai (Looping Frame)
+                                  const tick = () => {
+                                      if (vid.readyState === vid.HAVE_ENOUGH_DATA) {
+                                          canvas.height = vid.videoHeight;
+                                          canvas.width = vid.videoWidth;
+                                          ctx.drawImage(vid, 0, 0, canvas.width, canvas.height);
+                                          let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                                          
+                                          if (window.jsQR) {
+                                              let code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: "dontInvert" });
+                                              
+                                              if (code && code.data) {
+                                                  if (code.data !== lastScanned) {
+                                                      lastScanned = code.data;
+                                                      playBeep(); // Bunyikan beep
+                                                      
+                                                      resBox.textContent = `✅ ${code.data}`;
+                                                      resBox.style.display = 'block';
+                                                      
+                                                      // Sembunyikan hasil setelah 3 detik dan reset agar bisa scan kode yang sama lagi
+                                                      if(scanTimeout) clearTimeout(scanTimeout);
+                                                      scanTimeout = setTimeout(() => {
+                                                          resBox.style.display = 'none';
+                                                          lastScanned = ""; 
+                                                      }, 3000);
+                                                  }
+                                              }
+                                          }
+                                      }
+                                      requestAnimationFrame(tick);
+                                  };
+                                  requestAnimationFrame(tick);
+                              }
+                          })
+                          .catch(err => {
+                              el.innerHTML = `<span style="color:#ef4444; font-size:0.75rem; font-weight:700; text-shadow: 0 0 5px red;">🔴 KAMERA DIBLOKIR</span>`;
+                          });
+                  } else {
+                      el.innerHTML = `<span style="color:#ef4444; font-size:0.75rem; font-weight:700; text-shadow: 0 0 5px red;">🔴 TIDAK DUKUNG SCANNER</span>`;
+                  }
+              }
+          } else if(url && url.includes('http')) {
+              let videoId = '';
                   try {
                       if (url.includes('watch?v=')) {
                           videoId = url.split('v=')[1].split('&')[0];
@@ -3087,18 +3457,18 @@
                       // Parameter ditambahkan untuk autoplay, mute (wajib untuk autoplay), loop, dan menyembunyikan kontrol
                       const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&rel=0&showinfo=0`;
                       // Pointer-events: none digunakan agar pengguna tidak bisa menjeda (pause) video secara manual
-                      let safeTitle = (labelText || 'CCTV').replace(/'/g, "\\'");
                       el.innerHTML = `
                           <iframe width="100%" height="100%" src="${embedUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border-radius:0; pointer-events: none;"></iframe>
                           <!-- Layar pelindung klik transparan -->
                           <div onclick="openCctvFullscreen('${videoId}', '${safeTitle}')" style="position:absolute; inset:0; z-index:10; cursor:pointer; background:rgba(0,0,0,0.01);" title="Klik untuk perbesar & hidupkan suara"></div>
+                          <div style="position:absolute; bottom:4px; right:4px; font-size:0.6rem; color:#fff; font-family:monospace; z-index:11;" class="cctv-time">00:00:00</div>
                       `;
                   } else {
-                      el.innerHTML = `<span style="color:#ef4444; font-size:0.75rem; font-weight:700; animation: blinkRed 1s infinite; text-shadow: 0 0 5px red;">🔴 LINK ERROR</span><div style="position:absolute; bottom:4px; right:4px; font-size:0.6rem; color:#fff; font-family:monospace;" class="cctv-time">00:00:00</div>`;
+                      el.innerHTML = `<span style="color:#ef4444; font-size:0.75rem; font-weight:700; animation: blinkRed 1s infinite; text-shadow: 0 0 5px red;">🔴 LINK ERROR</span><div style="position:absolute; bottom:4px; right:4px; font-size:0.6rem; color:#fff; font-family:monospace; z-index:11;" class="cctv-time">00:00:00</div>`;
                   }
               } else {
                   // Kembalikan ke mockup animasi jika link kosong
-                  el.innerHTML = `<span style="color:#ef4444; font-size:0.75rem; font-weight:700; animation: blinkRed 1s infinite; text-shadow: 0 0 5px red;">🔴 LIVE</span><div style="position:absolute; bottom:4px; right:4px; font-size:0.6rem; color:#fff; font-family:monospace;" class="cctv-time">00:00:00</div>`;
+                  el.innerHTML = `<span style="color:#ef4444; font-size:0.75rem; font-weight:700; animation: blinkRed 1s infinite; text-shadow: 0 0 5px red;">🔴 LIVE</span><div style="position:absolute; bottom:4px; right:4px; font-size:0.6rem; color:#fff; font-family:monospace; z-index:11;" class="cctv-time">00:00:00</div>`;
               }
           };
           updateCctv('cctv1_content', db.settings.linksExtra.cctv1, 'cctv1_label', db.settings.linksExtra.cctv1Name || 'PRESENSI QR CODE');
@@ -3866,6 +4236,7 @@
           if(!set.rest2End) set.rest2End = '11:15';
           if(!set.s3Start) set.s3Start = '11:15';
           if(!set.s3End) set.s3End = '12:45';
+          if(set.sesi3Aktif === undefined) set.sesi3Aktif = true;
           if(!set.berhalangan) set.berhalangan = {};
 
           const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
@@ -3881,6 +4252,45 @@
           setEl('setJadwalS3Start', set.s3Start);
           setEl('setJadwalS3End', set.s3End);
           
+          const chkSesi3 = document.getElementById('setJadwalSesi3Aktif');
+          if (chkSesi3) {
+              chkSesi3.checked = set.sesi3Aktif;
+              const toggleSesi3 = () => {
+                  const isActive = chkSesi3.checked;
+                  
+                  // 1. Sembunyikan Istirahat 2
+                  const groupRest2 = document.getElementById('groupSetJadwalRest2');
+                  if (groupRest2) groupRest2.style.display = isActive ? 'flex' : 'none';
+                  
+                  // 2. Buramkan dan nonaktifkan input Sesi 3
+                  const inputsDiv = document.getElementById('waktuSesi3Inputs');
+                  if (inputsDiv) {
+                      inputsDiv.style.opacity = isActive ? '1' : '0.3';
+                      inputsDiv.style.pointerEvents = isActive ? 'auto' : 'none';
+                  }
+
+                  // 3. Update style lencana (badge) tombol Aktif / Tidak Aktif
+                  const lbl = document.getElementById('lblToggleSesi3');
+                  const txt = document.getElementById('textToggleSesi3');
+                  if (lbl && txt) {
+                      if (isActive) {
+                          lbl.style.background = '#e0f2fe';
+                          lbl.style.color = '#1d4ed8';
+                          lbl.style.borderColor = '#bfdbfe';
+                          txt.textContent = 'Aktif';
+                      } else {
+                          lbl.style.background = '#f1f5f9';
+                          lbl.style.color = '#64748b';
+                          lbl.style.borderColor = '#cbd5e1';
+                          txt.textContent = 'Tidak Aktif';
+                      }
+                  }
+              };
+              chkSesi3.removeEventListener('change', toggleSesi3);
+              chkSesi3.addEventListener('change', toggleSesi3);
+              toggleSesi3(); // Jalankan sekali saat dimuat
+          }
+          
           renderListGuruBerhalangan();
       }
 
@@ -3890,15 +4300,18 @@
           const dayIdx = el.value;
           const set = db.settings.jadwalSettings;
           if(!set.berhalangan) set.berhalangan = {};
-          const listBerhalangan = set.berhalangan[dayIdx] || [];
+          
+          const rawEx = set.berhalangan[dayIdx] || [];
+          const listBerhalangan = Array.isArray(rawEx) ? rawEx.map(x => String(x).trim()) : [];
           
           const pengawas = db.teachers.filter(t => t.role === 'PENGAWAS' && t.kode && t.kode !== '-');
           let html = '';
           pengawas.forEach(p => {
-              const isChecked = listBerhalangan.includes(p.kode) ? 'checked' : '';
-              html += `<label style="display:flex; align-items:center; gap:6px; font-size:0.75rem; cursor:pointer; background:var(--surface-alt); padding:4px 6px; border-radius:4px; border:1px solid var(--border);">
-                  <input type="checkbox" class="chk-berhalangan" value="${p.kode}" ${isChecked}>
-                  <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${p.nama}"><strong>${p.kode}</strong> - ${p.nama.split(' ')[0]}</span>
+              const safeKode = String(p.kode).trim();
+              const isChecked = listBerhalangan.includes(safeKode) ? 'checked' : '';
+              html += `<label style="display:flex; align-items:center; gap:6px; font-size:0.75rem; cursor:pointer; background:${isChecked ? 'rgba(239, 68, 68, 0.1)' : 'var(--surface-alt)'}; padding:4px 6px; border-radius:4px; border:1px solid ${isChecked ? '#ef4444' : 'var(--border)'};">
+                  <input type="checkbox" class="chk-berhalangan" value="${safeKode}" ${isChecked}>
+                  <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${p.nama}"><strong>${safeKode}</strong> - ${p.nama.split(' ')[0]}</span>
               </label>`;
           });
           document.getElementById('listGuruBerhalangan').innerHTML = html || '<span style="font-size:0.7rem; color:var(--text-light);">Belum ada pengawas tersedia.</span>';
@@ -3930,12 +4343,13 @@
               if(!db.jadwal_data) return;
               db.jadwal_data.forEach((dayInfo, dIdx) => {
                   let set = db.settings.jadwalSettings || {};
-                  let excludedCodes = (set.berhalangan && set.berhalangan[dIdx]) ? set.berhalangan[dIdx] : [];
+                  let rawEx = set.berhalangan ? (set.berhalangan[String(dIdx)] || set.berhalangan[dIdx]) : [];
+                  let excludedCodes = Array.isArray(rawEx) ? rawEx.map(x => String(x).trim()) : [];
                   
                   dayInfo.slots.forEach(slot => {
                       if (!slot.isRest && !slot.override) {
-                          // Singkirkan guru yang berhalangan dari daftar available di hari ini
-                          let availableCodes = pengawasCodes.filter(c => !excludedCodes.includes(c));
+                          // Singkirkan guru yang berhalangan dari daftar available di hari ini secara presisi (Abaikan spasi berlebih)
+                          let availableCodes = pengawasCodes.filter(c => !excludedCodes.includes(String(c).trim()));
                           let available = shuffle(availableCodes);
                           
                           // Prioritaskan yang SERING jadi cadangan untuk DAPAT ruangan
@@ -3978,6 +4392,7 @@
               let timeS1 = formatTimeSpan(set.s1Start, set.s1End);
               let timeS2 = formatTimeSpan(set.s2Start, set.s2End);
               let timeS3 = formatTimeSpan(set.s3Start || '11:15', set.s3End || '12:45');
+              let isS3Aktif = set.sesi3Aktif !== undefined ? set.sesi3Aktif : true;
 
               const defaultSubjects = [
                   ["PABP", "MATEMATIKA", "MULOK"],
@@ -4000,10 +4415,12 @@
                   let sub2 = defaultSubjects[i][1];
                   dayData.slots.push({ time: timeS2, subject: sub2, isRest: false, override: sub2 === "PRAKTIKUM" ? "PRAKTIKUM OLEH GURU MP" : null, assignments: [], cadangan: [] });
                   
-                  dayData.slots.push({ time: "ISTIRAHAT 2", subject: "ISTIRAHAT 2", isRest: true, override: null, assignments: [], cadangan: [] });
-                  
-                  let sub3 = defaultSubjects[i][2];
-                  dayData.slots.push({ time: timeS3, subject: sub3, isRest: false, override: sub3 === "PRAKTIKUM" ? "PRAKTIKUM OLEH GURU MP" : null, assignments: [], cadangan: [] });
+                  // Hanya tambahkan Istirahat 2 dan Sesi 3 jika dalam posisi AKTIF
+                  if (isS3Aktif) {
+                      dayData.slots.push({ time: "ISTIRAHAT 2", subject: "ISTIRAHAT 2", isRest: true, override: null, assignments: [], cadangan: [] });
+                      let sub3 = defaultSubjects[i][2];
+                      dayData.slots.push({ time: timeS3, subject: sub3, isRest: false, override: sub3 === "PRAKTIKUM" ? "PRAKTIKUM OLEH GURU MP" : null, assignments: [], cadangan: [] });
+                  }
                   
                   db.jadwal_data.push(dayData);
               }
@@ -4082,6 +4499,8 @@
           });
           document.getElementById('jadwalLegend').innerHTML = legendHtml || '<span style="color:var(--text-light);">Belum ada pengawas.</span>';
           document.getElementById('jadwalViewLegend').innerHTML = legendHtml || '<span style="color:var(--text-light);">Belum ada pengawas.</span>';
+          
+          if (typeof renderKartuPengawas === 'function') renderKartuPengawas();
       }
 
       function renderPengaturan() {
@@ -4099,7 +4518,6 @@
           setVal('profNipInput', db.settings.nip || '');
           setVal('settingLogoKiriUrl', db.settings.logoKiriUrl || db.settings.logoUrl || '');
           setVal('settingLogoKananUrl', db.settings.logoKananUrl || '');
-          setVal('settingRunningText', db.settings.runningText || '');
           const autoSyncEl = document.getElementById('settingAutoSync');
           if(autoSyncEl) autoSyncEl.checked = db.settings.autoSyncCloud !== false;
           
@@ -4136,6 +4554,9 @@
               return;
           }
 
+          const logoKiriHtml = (db.settings.logoKiriUrl || db.settings.logoUrl) ? `<img src="${db.settings.logoKiriUrl || db.settings.logoUrl}" style="width:36px; height:36px; object-fit:contain;" />` : `<div style="width:36px;"></div>`;
+          const logoKananHtml = db.settings.logoKananUrl ? `<img src="${db.settings.logoKananUrl}" style="width:36px; height:36px; object-fit:contain;" />` : `<div style="width:36px;"></div>`;
+
           // Variasi warna cerah & apik untuk background kartu 3D
           const bgColors = [
               'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)', // Biru
@@ -4149,18 +4570,43 @@
 
           let html = '';
           panitiaList.forEach((p, index) => {
-              const imgUrl = p.photoUrl || p.photo_csv || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='65' height='85' fill='%23cbd5e1'><rect width='65' height='85' rx='8'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23475569' font-size='12' font-weight='bold'>FOTO</text></svg>";
+              const imgUrl = p.photoUrl || p.photo_csv || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='100' fill='%23cbd5e1'><rect width='80' height='100' rx='8'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23475569' font-size='12' font-weight='bold'>FOTO</text></svg>";
               const bg = bgColors[index % bgColors.length];
               
-              html += `<div class="panitia-card" data-index="${index}" style="background: ${bg};">
-                  <div style="flex-shrink:0;">
-                      <img src="${imgUrl}" style="width:65px; height:85px; object-fit:cover; border-radius:14px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); border: 2px solid #fff;" alt="Foto">
+              html += `<div class="panitia-card" data-index="${index}" style="background: ${bg}; padding: 0; flex-direction: column; gap: 0; align-items: stretch; border: 2px solid rgba(255,255,255,0.8);">
+                  <div style="background: rgba(255,255,255,0.4); padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.5); display: flex; align-items: center; justify-content: space-between;">
+                      <div style="flex-shrink:0;">${logoKiriHtml}</div>
+                      <div style="text-align: center; flex: 1;">
+                          <div style="font-size: 0.75rem; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px;">KARTU PANITIA</div>
+                          <div style="font-size: 0.6rem; color: #1e293b; font-weight: 800; margin-top: 2px;">${db.settings.nama || 'SMP NEGERI'}</div>
+                          <div style="font-size: 0.55rem; color: #1e293b; font-weight: 700;">TA ${db.settings.tahunAjaran || '2026/2027'}</div>
+                      </div>
+                      <div style="flex-shrink:0;">${logoKananHtml}</div>
                   </div>
-                  <div style="flex:1; overflow: hidden; position: relative; z-index: 2;">
-                      <div style="font-size: 0.75rem; font-weight: 800; color: #1e40af; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.5px;">KODE: ${p.kode}</div>
-                      <div style="font-size: 1.05rem; font-weight: 900; color: #0f172a; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 1px 1px rgba(255,255,255,0.8);">${p.nama}</div>
-                      <div style="font-size: 0.75rem; font-weight: 800; color: #b45309; background: rgba(255,255,255,0.7); display: inline-block; padding: 2px 8px; border-radius: 99px; margin-bottom: 4px; border: 1px solid rgba(255,255,255,0.9);">${p.kepanitiaan}</div>
-                      <div style="font-size: 0.7rem; color: #334155; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-weight: 600;" title="${p.uraian_tugas}">${p.uraian_tugas}</div>
+                  <div style="padding: 1rem 0.75rem; display: flex; flex-direction: column; align-items: center; flex: 1; z-index: 2;">
+                      <img src="${imgUrl}" style="width: 75px; height: 95px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); border: 3px solid #fff; margin-bottom: 12px;" alt="Foto">
+                      <div style="text-align: center; width: 100%;">
+                          <div style="font-size: 1.05rem; font-weight: 900; color: #0f172a; margin-bottom: 4px; line-height: 1.2; text-shadow: 0 1px 2px rgba(255,255,255,0.8);">${p.nama}</div>
+                          <div style="background: rgba(15, 23, 42, 0.8); color: #fff; display: inline-block; padding: 4px 12px; border-radius: 99px; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); margin-bottom: 8px; margin-top: 4px; max-width: 95%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase;">
+                              ${p.kepanitiaan || 'PANITIA'}
+                          </div>
+                          <div>
+                              <span style="font-size: 0.65rem; color: #1e293b; font-weight: 800; background: rgba(255,255,255,0.6); padding: 2px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.8); display: inline-block;">KODE: ${p.kode}</span>
+                          </div>
+                      </div>
+                  </div>
+                  <div style="background: rgba(255,255,255,0.3); padding: 8px 12px; border-top: 1px dashed rgba(255,255,255,0.5); display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
+                      <div style="font-size: 0.6rem; color: #0f172a; font-weight: 700; line-height: 1.2; text-align: left;">
+                          Profesional &<br/>Berintegritas
+                      </div>
+                      <div style="text-align: right; line-height: 1.15;">
+                          <div style="font-size: 0.6rem; color: #334155; font-weight: 600;">Kepala Sekolah</div>
+                          <div style="font-size: 0.7rem; font-weight: 900; color: #0f172a; margin-top: 2px;">${db.settings.kepsek || '-'}</div>
+                          <div style="font-size: 0.6rem; color: #334155; font-weight: 700;">NIP ${db.settings.nip ? db.settings.nip.replace(/\./g, '') : '-'}</div>
+                      </div>
+                  </div>
+                  <div style="background: rgba(0,0,0,0.05); padding: 6px; text-align: center; font-size: 0.6rem; color: #475569; font-weight: 800; border-top: 1px solid rgba(255,255,255,0.3);">
+                      👆 Klik untuk Profil & Tugas Detail
                   </div>
               </div>`;
           });
@@ -4267,6 +4713,10 @@
       document.getElementById('btnCetakSemuaKartuMuridView')?.addEventListener('click', () => {
           unifiedPrintKartu('cardsContainerMuridGridView', 'printOrienKartuMurid', 'printScaleKartuMurid');
       });
+      
+      document.getElementById('btnCetakKartuPengawas')?.addEventListener('click', () => {
+          unifiedPrintKartu('cardsContainerPengawasGrid', 'printOrienKartuPengawas', 'printScaleKartuPengawas');
+      });
 
       ['dokumenJenisSelect', 'dokumenRuangSelect'].forEach(id => {
           const el = document.getElementById(id);
@@ -4323,6 +4773,11 @@
           if (el) { el.addEventListener('change', renderCardsGrid); el.addEventListener('input', renderCardsGrid); }
       });
       
+      ['printOrienKartuPengawas', 'printScaleKartuPengawas', 'perPageKartuPengawas'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) { el.addEventListener('change', renderKartuPengawas); el.addEventListener('input', renderKartuPengawas); }
+      });
+      
       ['denahRuangSelect', 'denahKapasitasSelect'].forEach(id => {
           const el = document.getElementById(id);
           if (el) { el.addEventListener('change', renderDenah); }
@@ -4331,7 +4786,13 @@
       document.getElementById('btnSavePeranGuru')?.addEventListener('click', () => {
           saveData();
           syncDataToCloud();
-          showToast('Pengaturan Peran & Jadwal berhasil disimpan ke Cloud!');
+          showToast('Data Peran, Foto & Jadwal berhasil disimpan ke Cloud!');
+      });
+
+      document.getElementById('btnForceSaveStudents')?.addEventListener('click', () => {
+          saveData();
+          syncDataToCloud();
+          showToast('Data Siswa & Foto berhasil dikunci ke Cloud!');
       });
 
       document.getElementById('btnGenerateJadwal')?.addEventListener('click', () => {
@@ -4484,7 +4945,13 @@
                           while (curr != 0) { rand = Math.floor(Math.random() * curr); curr--; [arr[curr], arr[rand]] = [arr[rand], arr[curr]]; }
                           return arr;
                       }
-                      let availableCodes = shuffleLoc(pengawas.filter(p => p.kode && p.kode !== '-').map(p => p.kode));
+                      let set = db.settings.jadwalSettings || {};
+                      let rawEx = set.berhalangan ? (set.berhalangan[String(dIdx)] || set.berhalangan[dIdx]) : [];
+                      let excludedCodes = Array.isArray(rawEx) ? rawEx.map(x => String(x).trim()) : [];
+                      
+                      let availableCodes = pengawas.filter(p => p.kode && p.kode !== '-').map(p => p.kode);
+                      availableCodes = shuffleLoc(availableCodes.filter(c => !excludedCodes.includes(String(c).trim())));
+                      
                       let assignments = [];
                       for(let r=1; r<=20; r++) assignments.push(availableCodes.length > 0 ? availableCodes.pop() : '-');
                       slot.assignments = assignments;
@@ -4511,24 +4978,31 @@
           db.settings.jadwalSettings.rest2End = getEl('setJadwalRest2End') || '11:15';
           db.settings.jadwalSettings.s3Start = getEl('setJadwalS3Start') || '11:15';
           db.settings.jadwalSettings.s3End = getEl('setJadwalS3End') || '12:45';
+          
+          const chkS3 = document.getElementById('setJadwalSesi3Aktif');
+          if (chkS3) db.settings.jadwalSettings.sesi3Aktif = chkS3.checked;
+          const isS3Aktif = db.settings.jadwalSettings.sesi3Aktif;
 
           if(db.jadwal_data && db.jadwal_data.length > 0) {
                let dates = getDatesForSchedule(db.settings.jadwalSettings.startDate, db.jadwal_data.length);
                db.jadwal_data.forEach((day, i) => {
                    day.day = dates[i];
                    
-                   // Peningkatan format lama (3 slot) menjadi format baru (5 slot)
-                   if (day.slots.length === 3) {
-                       day.slots[1].subject = "ISTIRAHAT 1";
-                       day.slots[1].time = "ISTIRAHAT 1";
+                   // Logika penambahan/penghapusan Sesi 3 sesuai centang "Aktif"
+                   if (isS3Aktif && day.slots.length <= 3) {
+                       if (day.slots[1]) { day.slots[1].subject = "ISTIRAHAT 1"; day.slots[1].time = "ISTIRAHAT 1"; }
                        day.slots.push({ time: "ISTIRAHAT 2", subject: "ISTIRAHAT 2", isRest: true, override: null, assignments: [], cadangan: [] });
                        day.slots.push({ time: formatTimeSpan(db.settings.jadwalSettings.s3Start, db.settings.jadwalSettings.s3End), subject: "MULOK", isRest: false, override: null, assignments: [], cadangan: [] });
+                   } else if (!isS3Aktif && day.slots.length > 3) {
+                       day.slots = day.slots.slice(0, 3); // Potong array, buang istirahat 2 dan sesi 3 sepenuhnya
                    }
                    
-                   if(day.slots.length >= 5) {
+                   if(day.slots.length >= 3) {
                        day.slots[0].time = formatTimeSpan(db.settings.jadwalSettings.s1Start, db.settings.jadwalSettings.s1End);
                        day.slots[1].time = "ISTIRAHAT 1";
                        day.slots[2].time = formatTimeSpan(db.settings.jadwalSettings.s2Start, db.settings.jadwalSettings.s2End);
+                   }
+                   if(isS3Aktif && day.slots.length >= 5) {
                        day.slots[3].time = "ISTIRAHAT 2";
                        day.slots[4].time = formatTimeSpan(db.settings.jadwalSettings.s3Start, db.settings.jadwalSettings.s3End);
                    }
@@ -4550,12 +5024,18 @@
               if(!set.berhalangan) set.berhalangan = {};
               if(!set.berhalangan[dayIdx]) set.berhalangan[dayIdx] = [];
               
+              const valStr = String(e.target.value).trim();
+              let currentArr = Array.isArray(set.berhalangan[dayIdx]) ? set.berhalangan[dayIdx].map(x => String(x).trim()) : [];
+
               if (e.target.checked) {
-                  if (!set.berhalangan[dayIdx].includes(e.target.value)) set.berhalangan[dayIdx].push(e.target.value);
+                  if (!currentArr.includes(valStr)) currentArr.push(valStr);
               } else {
-                  set.berhalangan[dayIdx] = set.berhalangan[dayIdx].filter(x => x !== e.target.value);
+                  currentArr = currentArr.filter(x => x !== valStr);
               }
+              set.berhalangan[dayIdx] = currentArr;
+              
               saveData();
+              renderListGuruBerhalangan(); // Render ulang untuk efek warna merah
               showToast('Status berhalangan disimpan. Silakan klik "Acak Jadwal" untuk menerapkan.');
           }
       });
@@ -5081,10 +5561,117 @@
               db.settings.templatesLandscape.splice(idx, 1);
           }
           saveData();
-          renderCardsGrid();
-          renderTemplateGalleries();
           showToast('Template berhasil dihapus dari memori.');
       };
+      
+      function renderKartuPengawas() {
+          const pengawas = db.teachers.filter(t => t.role === 'PENGAWAS');
+          const container = document.getElementById('cardsContainerPengawasGrid');
+          if(!container) return;
+          
+          if (pengawas.length === 0) {
+              container.innerHTML = '<div style="padding:2rem; text-align:center; color:var(--text-muted);">Belum ada guru dengan peran PENGAWAS.</div>';
+              return;
+          }
+
+          const oK = document.getElementById('printOrienKartuPengawas')?.value || 'portrait';
+          const sK = document.getElementById('printScaleKartuPengawas')?.value || '100';
+          const perPage = parseInt(document.getElementById('perPageKartuPengawas')?.value) || 8;
+          
+          const logoKiriHtml = (db.settings.logoKiriUrl || db.settings.logoUrl) ? `<img src="${db.settings.logoKiriUrl || db.settings.logoUrl}" style="width:40px; height:40px; object-fit:contain; background:#fff; border-radius:4px; padding:1px;" />` : `<div style="width:40px;"></div>`;
+          const logoKananHtml = db.settings.logoKananUrl ? `<img src="${db.settings.logoKananUrl}" style="width:40px; height:40px; object-fit:contain; background:#fff; border-radius:4px; padding:1px;" />` : `<div style="width:40px;"></div>`;
+          
+          let fullAlamat = db.settings.alamat || '';
+          let line1Alamat = fullAlamat, line2Alamat = '';
+          const splitIndex = fullAlamat.indexOf('Kec. Gelumbang');
+          if (splitIndex !== -1) {
+              line1Alamat = fullAlamat.substring(0, splitIndex).trim();
+              line2Alamat = fullAlamat.substring(splitIndex).trim();
+              if (line1Alamat.endsWith(',')) line1Alamat = line1Alamat.substring(0, line1Alamat.length - 1).trim();
+          }
+
+          const chunks = chunkArray(pengawas, perPage);
+          
+          const html = chunks.map(chunk => {
+              const cardsHtml = chunk.map(p => {
+                  let resumeHtml = '';
+                  if (db.jadwal_data && db.jadwal_data.length > 0) {
+                      let resume = [];
+                      db.jadwal_data.forEach(day => {
+                          let dayRoles = [];
+                          day.slots.forEach(slot => {
+                              if (!slot.isRest && !slot.override) {
+                                  let rIndex = slot.assignments.indexOf(p.kode);
+                                  if (rIndex !== -1) {
+                                      dayRoles.push(`R${rIndex + 1}`);
+                                  } else if (slot.cadangan && slot.cadangan.includes(p.kode)) {
+                                      dayRoles.push('Cdgn');
+                                  }
+                              }
+                          });
+                          if (dayRoles.length > 0) {
+                              let dayName = day.day.split(',')[0];
+                              resume.push(`<tr><td style="padding:2px; border:1px solid #cbd5e1; font-weight:700; color:#0f172a;">${dayName}</td><td style="padding:2px; border:1px solid #cbd5e1; font-weight:800; color:#1d4ed8;">${dayRoles.join(', ')}</td></tr>`);
+                          }
+                      });
+                      if (resume.length > 0) {
+                          resumeHtml = `<table style="width:100%; border-collapse:collapse; text-align:center; font-size:0.55rem; margin-top:6px;">
+                              <thead style="background:#e2e8f0; color:#475569;"><tr><th style="padding:2px; border:1px solid #cbd5e1;">HARI</th><th style="padding:2px; border:1px solid #cbd5e1;">TUGAS RUANG / CADANGAN</th></tr></thead>
+                              <tbody>${resume.join('')}</tbody>
+                          </table>`;
+                      } else {
+                          resumeHtml = `<div style="font-size:0.6rem; color:#ef4444; text-align:center; margin-top:6px; font-weight:700;">Tidak ada jadwal mengawas</div>`;
+                      }
+                  } else {
+                      resumeHtml = `<div style="font-size:0.6rem; color:#94a3b8; text-align:center; margin-top:6px;">Jadwal belum disusun</div>`;
+                  }
+
+                  const defaultPhoto = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='75' fill='%23cbd5e1'><rect width='60' height='75' rx='4'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23475569' font-size='10' font-weight='bold'>FOTO</text></svg>";
+                  
+                  return `
+                  <div class="id-card" style="width: 8cm; margin-bottom: 10px; page-break-inside: avoid; border: 1px solid #94a3b8;">
+                    <div class="id-card-header" style="justify-content: space-between; text-align: center; padding: 0.4rem; background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%);">
+                      <div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 40px;">${logoKiriHtml}</div>
+                      <div style="flex: 1; padding: 0 4px; display: flex; flex-direction: column; justify-content: center; color: #fff;">
+                        <div class="id-card-header-title" style="font-size:0.75rem; font-weight: 900; text-transform:uppercase; margin-bottom:2px; color: #fff;">${db.settings.nama || 'SMP NEGERI'}</div>
+                        <div class="id-card-header-sub" style="font-size:0.45rem; line-height:1.1; color: #dbeafe;">${line1Alamat}</div>
+                        ${line2Alamat ? `<div class="id-card-header-sub" style="font-size:0.45rem; line-height:1.1; color: #dbeafe;">${line2Alamat}</div>` : ''}
+                      </div>
+                      <div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 40px;">${logoKananHtml}</div>
+                    </div>
+                    <div class="id-card-banner" style="background:#fef3c7; color:#b45309; border-bottom:1px solid #fde68a;">KARTU PENGAWAS ASESMEN</div>
+                    <div class="id-card-body" style="flex-direction: column; padding: 0.6rem;">
+                      <div style="display: flex; width: 100%; gap: 10px;">
+                        <div style="width: 60px; flex-shrink: 0;">
+                          <img src="${p.photoUrl || p.photo_csv || defaultPhoto}" style="width:60px; height:75px; object-fit:cover; border-radius:4px; border:1px solid #cbd5e1;" />
+                        </div>
+                        <div style="flex:1; display:flex; flex-direction:column; justify-content:flex-start;">
+                          <div style="font-size:0.8rem; font-weight:900; line-height:1.2; color:#0f172a; text-transform:uppercase;">${p.nama}</div>
+                          <div style="font-size:0.6rem; color:#475569; margin-top: 2px;">NIP ${p.nip !== '-' ? p.nip : ''}</div>
+                          <div style="margin-top: 4px;">
+                              <span style="font-size:0.65rem; font-weight:800; background:#dbeafe; color:#1e40af; padding:2px 6px; border-radius:4px; border:1px solid #bfdbfe;">KODE: ${p.kode}</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div style="width: 100%;">
+                        ${resumeHtml}
+                      </div>
+                    </div>
+                    <div class="id-card-footer" style="background:#f8fafc; border-top:1px dashed #cbd5e1;">
+                      <div style="font-size:0.55rem; color:#64748b;">Disiplin & Berintegritas</div>
+                      <div style="text-align:right;">
+                        <div style="font-size:0.55rem; color:#475569;">Kepala Sekolah</div>
+                        <div style="font-weight:800;color:#0f172a;font-size:0.65rem;margin-top:2px;">${db.settings.kepsek || '-'}</div>
+                        <div style="font-size:0.55rem; color:#475569;">NIP ${db.settings.nip ? db.settings.nip.replace(/\./g, '') : '-'}</div>
+                      </div>
+                    </div>
+                  </div>`;
+              }).join('');
+              return `<div class="a4-kertas ${oK}"><div class="a4-content" style="zoom: ${sK}%; justify-content: space-evenly; align-content: flex-start; padding: 10mm;">${cardsHtml}</div></div>`;
+          }).join('');
+          
+          container.innerHTML = html;
+      }
 
       document.getElementById('uploadTemplatePortrait')?.addEventListener('change', function(e) {
           const file = e.target.files && e.target.files[0];
@@ -5186,6 +5773,7 @@
           initDokumenForm();
           renderDokumen();
           renderCardsGrid();
+          renderKartuPengawas();
           renderTemplateGalleries();
           renderDenah();
           renderJadwal();
@@ -6270,19 +6858,33 @@
           `;
           document.body.appendChild(syncOverlay);
 
-          fetchRealtimeGasData(false).then(() => {
-              if (db.students.length <= 2) fetchPesertaCSV();
-              if (db.teachers.length <= 2) fetchGuruCSV();
+          fetchRealtimeGasData(false).then(async () => {
+              // PERMINTAAN USER: Menarik seluruh data CSV secara OTOMATIS saat loading
+              await Promise.all([
+                  fetchPesertaCSV(true),
+                  fetchGuruCSV(true),
+                  fetchNilaiCSV(true)
+              ]);
               setTimeout(() => {
                   syncOverlay.style.opacity = '0';
                   setTimeout(() => syncOverlay.remove(), 500);
               }, 600);
           });
       } else {
-          // Auto-tarik data CSV jika data siswa/guru masih kosong (hanya data sampel bawaan)
-          if (db.students.length <= 2) fetchPesertaCSV();
-          if (db.teachers.length <= 2) fetchGuruCSV();
+          // Auto-tarik data CSV walau tanpa GAS
+          fetchPesertaCSV(true);
+          fetchGuruCSV(true);
+          fetchNilaiCSV(true);
       }
+
+      // PERMINTAAN USER: Auto-Refresh Sinkronisasi CSV berjalan di latar belakang
+      setInterval(() => {
+          if(db.settings.autoSyncCloud !== false) {
+              fetchPesertaCSV(true);
+              fetchGuruCSV(true);
+              fetchNilaiCSV(true);
+          }
+      }, 45000); // Sinkronisasi setiap 45 detik agar data selalu Realtime tanpa mengganggu sistem
     })();
   </script>
 </body>
