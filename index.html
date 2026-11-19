@@ -2168,8 +2168,8 @@
                 kelas9: ["PABP", "PKN", "BAHASA INDONESIA", "MATEMATIKA", "IPA", "BAHASA INGGRIS", "IPS", "PRAKARYA", "INFORMATIKA", "PJOK"].map(m => ({mapel: m, url: '', aktif: false}))
             },
             linksExtra: {
-                cctv1: '', cctv2: '', cctv3: '', cctv4: '',
-                cctv1Name: 'PRESENSI QR CODE', cctv2Name: 'SEKRETARIAT PANITIA', cctv3Name: 'RUANG ASESMEN DEPAN', cctv4Name: 'RUANG ASESMEN BELAKANG',
+                cctv1: '', cctv2: 'https://youtu.be/cdDbfKPAQ6Y', cctv3: '', cctv4: '',
+                cctv1Name: 'PRESENSI QR CODE', cctv2Name: 'Live Makkah', cctv3Name: 'RUANG ASESMEN DEPAN', cctv4Name: 'RUANG ASESMEN BELAKANG',
                 presensiCsv: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vScgjB063SW7NX46qQrN0BXak5WsjCVMMl1K6zSb7UyfRgJfGH2eYjX8x-4ksITs4JZqN7c4GsRrL6S/pub?gid=150988490&single=true&output=csv',
                 nilaiCsv7: Array.from({length:10}, () => ''),
                 nilaiCsv8: Array.from({length:10}, () => ''),
@@ -3233,7 +3233,7 @@
           if(!db.settings.linksExtra.nilaiCsv9) db.settings.linksExtra.nilaiCsv9 = Array(10).fill('');
 
           document.getElementById('nameCctv1').value = db.settings.linksExtra.cctv1Name || 'PRESENSI QR CODE';
-          document.getElementById('nameCctv2').value = db.settings.linksExtra.cctv2Name || 'SEKRETARIAT PANITIA';
+          document.getElementById('nameCctv2').value = db.settings.linksExtra.cctv2Name || 'Live Makkah';
           document.getElementById('nameCctv3').value = db.settings.linksExtra.cctv3Name || 'RUANG ASESMEN DEPAN';
           document.getElementById('nameCctv4').value = db.settings.linksExtra.cctv4Name || 'RUANG ASESMEN BELAKANG';
 
@@ -3472,7 +3472,7 @@
               }
           };
           updateCctv('cctv1_content', db.settings.linksExtra.cctv1, 'cctv1_label', db.settings.linksExtra.cctv1Name || 'PRESENSI QR CODE');
-          updateCctv('cctv2_content', db.settings.linksExtra.cctv2, 'cctv2_label', db.settings.linksExtra.cctv2Name || 'SEKRETARIAT PANITIA');
+          updateCctv('cctv2_content', db.settings.linksExtra.cctv2, 'cctv2_label', db.settings.linksExtra.cctv2Name || 'Live Makkah');
           updateCctv('cctv3_content', db.settings.linksExtra.cctv3, 'cctv3_label', db.settings.linksExtra.cctv3Name || 'RUANG ASESMEN DEPAN');
           updateCctv('cctv4_content', db.settings.linksExtra.cctv4, 'cctv4_label', db.settings.linksExtra.cctv4Name || 'RUANG ASESMEN BELAKANG');
       }
