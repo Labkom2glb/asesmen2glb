@@ -54,7 +54,7 @@
     body.dark-mode .kursi-nama { color: #f8fafc !important; }
 
     /* Layout & Header */
-    .app-shell { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+    .app-shell { display: flex; flex-direction: column; min-height: 100vh; overflow: visible; }
     .topbar { background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%); color: #ffffff; padding: 0.85rem 1.25rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem; flex-shrink: 0; position: relative; z-index: 40; box-shadow: var(--shadow-md); }
     .brand { display: flex; align-items: center; gap: 0.75rem; }
     .brand-icon { width: 80px; height: 80px; border-radius: 10px; background: rgba(255, 255, 255, 0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.25); }
@@ -65,7 +65,7 @@
     .topbar-actions { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
 
     /* Navigation */
-    .body-wrapper { display: flex; flex: 1; flex-direction: column; overflow: hidden; background: var(--bg); }
+    .body-wrapper { display: flex; flex: 1; flex-direction: column; overflow: visible; background: var(--bg); }
     .nav-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0.75rem 1rem; display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; justify-content: center; flex-shrink: 0; z-index: 20; }
     
     /* Tombol Navigasi Menu 3D & Berwarna */
@@ -94,7 +94,7 @@
     
     /* Variasi Warna Masing-masing Tab Menu */
     .nav-btn[data-tab="tab-dashboard"] { --btn-color-light: #60a5fa; --btn-color-main: #3b82f6; --btn-color-dark: #1d4ed8; }
-    .nav-btn[data-tab="tab-jadwal-view"] { --btn-color-light: #c084fc; --btn-color-main: #a855f7; --btn-color-dark: #7e22ce; }
+    .nav-btn[data-tab="tab-jadwal-view"] { --btn-color-light: #f87171; --btn-color-main: #ef4444; --btn-color-dark: #b91c1c; }
     .nav-btn[data-tab="tab-kartu-view"] { --btn-color-light: #6ee7b7; --btn-color-main: #34d399; --btn-color-dark: #059669; }
     .nav-btn[data-tab="tab-jadwal"] { --btn-color-light: #a78bfa; --btn-color-main: #8b5cf6; --btn-color-dark: #6d28d9; }
     .nav-btn[data-tab="tab-buku-induk"] { --btn-color-light: #2dd4bf; --btn-color-main: #14b8a6; --btn-color-dark: #0f766e; }
@@ -121,11 +121,11 @@
       box-shadow: 0 0 0 #b91c1c, 0 1px 2px rgba(0,0,0,0.2) !important;
     }
 
-    .main-container { flex: 1; width: 100%; margin: 0 auto; padding: 1.25rem; overflow-y: auto; scrollbar-width: thin; }
+    .main-container { flex: 1; width: 100%; margin: 0 auto; padding: 1.25rem; overflow: visible; }
 
     @media (min-width: 900px) {
       .body-wrapper { flex-direction: row; }
-      .nav-bar { flex-direction: column; width: 208px; border-bottom: none; border-right: 1px solid var(--border); padding: 1.25rem 0.75rem; align-items: stretch; overflow-y: auto; flex-wrap: nowrap; justify-content: flex-start; }
+      .nav-bar { position: sticky; top: 0; height: 100vh; flex-direction: column; width: 208px; border-bottom: none; border-right: 1px solid var(--border); padding: 1.25rem 0.75rem; align-items: stretch; overflow-y: auto; flex-wrap: nowrap; justify-content: flex-start; }
       .nav-btn { justify-content: flex-start; text-align: left; padding: 0.5rem 0.8rem; font-size: 0.85rem; margin-bottom: 8px; flex: none; }
       .main-container { max-width: calc(100% - 208px); }
     }
@@ -346,9 +346,6 @@
 
     @keyframes blinkRed { 0% { opacity: 1; box-shadow: 0 0 8px red; } 50% { opacity: 0.2; box-shadow: none; } 100% { opacity: 1; box-shadow: 0 0 8px red; } }
     .blink-indicator { display: inline-block; width: 10px; height: 10px; background: #ef4444; border-radius: 50%; animation: blinkRed 1s infinite; margin-right: 4px; }
-    
-    @keyframes blinkRedWhite { 0%, 100% { color: #ef4444; text-shadow: 0 0 8px #ffffff; } 50% { color: #ffffff; text-shadow: 0 0 8px #ef4444; } }
-    .token-blink { animation: blinkRedWhite 0.8s infinite; font-weight: 900; }
 
     /* KARTU MURID 9x6 CSS */
     .card-murid-wrapper { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; width: 100%; }
@@ -549,41 +546,66 @@
 </head>
 <body>
   <div class="app-shell">
-    <header class="topbar">
-      <div style="width:100%; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75rem;">
-        <div class="brand">
-          <div class="brand-icon" id="headerLogoContainer" style="background: transparent; border: none;">
-            <img src="https://res.cloudinary.com/dqztkjx8i/image/upload/v1760185516/1692069187442-removebg-preview_y1vwbd.png" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;" />
-          </div>
-          <div>
-            <div class="brand-title" id="headerSchoolName">SMP Negeri 1 Nusantara</div>
-            <div class="brand-subtitle">
-              <span>SIM Asesmen Pintar v3.0</span>
+    <header class="topbar" style="flex-direction: column; gap: 0.5rem; align-items: stretch;">
+      <div style="width:100%; display:flex; justify-content:space-between; align-items:stretch; flex-wrap:wrap; gap:0.75rem;">
+        
+        <!-- Bagian Kiri (Identitas, Tombol, Waktu, Token) -->
+        <div style="display:flex; flex-direction:column; gap:0.5rem; max-width:400px; width:100%; flex: 1;">
+            <div class="brand">
+              <div class="brand-icon" id="headerLogoContainer" style="background: transparent; border: none;">
+                <img src="https://res.cloudinary.com/dqztkjx8i/image/upload/v1760185516/1692069187442-removebg-preview_y1vwbd.png" alt="Logo" style="width: 100%; height: 100%; object-fit: contain;" />
+              </div>
+              <div style="flex:1;">
+                <div class="brand-title" id="headerSchoolName">SMP Negeri 1 Nusantara</div>
+                <div class="brand-subtitle">
+                  <span>SIM Asesmen Pintar v3.0</span>
+                </div>
+              </div>
             </div>
-            <div style="display: flex; align-items: center; gap: 0.5rem; margin-top: 4px; flex-wrap: wrap;">
-                <div id="realtimeClock" style="font-family:'Courier New', Courier, monospace; font-size:0.75rem; font-weight:800; background:rgba(255,255,255,0.15); padding:3px 6px; border-radius:4px; letter-spacing:1px; border:1px solid rgba(255,255,255,0.2); text-shadow: 0 1px 2px rgba(0,0,0,0.3);">00:00:00</div>
-                <button type="button" class="btn btn-outline btn-sm" id="btnToggleNilaiHeader" style="background:rgba(255,255,255,0.12);color:#fff;border-color:rgba(255,255,255,0.28); font-weight: 800; padding: 0.25rem 0.6rem; box-shadow: 0 2px 4px rgba(0,0,0,0.2); font-size: 0.7rem; letter-spacing: 0.5px;">📊 CEK NILAI</button>
-                <button type="button" class="btn btn-outline btn-sm" id="btnToggleSoalHeader" style="background:rgba(255,255,255,0.12);color:#fff;border-color:rgba(255,255,255,0.28); font-weight: 800; padding: 0.25rem 0.6rem; box-shadow: 0 2px 4px rgba(0,0,0,0.2); font-size: 0.7rem; letter-spacing: 0.5px;">📝 SOAL</button>
+            
+            <!-- TOMBOL MENU CEPAT SEJAJAR DI BAWAH LOGO -->
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; width: 100%;">
+                <div id="realtimeClock" style="font-family:'Courier New', Courier, monospace; font-size:0.75rem; font-weight:800; background:rgba(255,255,255,0.15); padding:0.35rem 0; border-radius:4px; letter-spacing:1px; border:1px solid rgba(255,255,255,0.2); text-shadow: 0 1px 2px rgba(0,0,0,0.3); flex:1; text-align:center;">00:00:00</div>
+                <button type="button" class="btn btn-outline btn-sm" id="btnToggleNilaiHeader" style="background:rgba(255,255,255,0.12);color:#fff;border-color:rgba(255,255,255,0.28); font-weight: 800; padding: 0.35rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.2); font-size: 0.7rem; letter-spacing: 0.5px; flex:1; justify-content:center;">📊 CEK NILAI</button>
+                <button type="button" class="btn btn-outline btn-sm" id="btnToggleSoalHeader" style="background:rgba(255,255,255,0.12);color:#fff;border-color:rgba(255,255,255,0.28); font-weight: 800; padding: 0.35rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.2); font-size: 0.7rem; letter-spacing: 0.5px; flex:1; justify-content:center;">📝 SOAL</button>
             </div>
-          </div>
+            
+            <!-- KOTAK WAKTU HITUNG MUNDUR (DI BAWAH LOGO) -->
+            <div id="headerTimerOnly" style="display:none; align-items:center; background:rgba(255,255,255,0.1); border-radius:6px; padding:4px 10px; border:1px solid rgba(255,255,255,0.2); width:100%;">
+                <div style="font-weight:bold; color:#facc15; font-size:0.8rem; width:100%; text-align:center;">⏳ Sisa Waktu: <span id="headerSisaWaktu" style="font-size:0.9rem;">-</span></div>
+            </div>
+            
+            <!-- KOTAK TOKEN (FULL WIDTH MEMANJANG) -->
+            <div id="headerTokenContainer" style="display:none; width:100%; align-items:center; justify-content:center; background:#ffffff; border-radius:6px; padding:4px 10px; border:1px solid #ef4444; box-shadow:0 2px 4px rgba(0,0,0,0.2); overflow:hidden;">
+                <div style="font-weight:900; color:#ef4444; white-space:nowrap; margin-right:8px; font-size:0.85rem;">TOKEN:</div>
+                <div id="tokenTextWrapper" style="display:flex; align-items:center; justify-content:center;">
+                    <span id="tokenStatic" style="font-weight:900; color:#ef4444; letter-spacing:1px; font-size:0.9rem;">*** (Belum Rilis)</span>
+                    <marquee id="tokenMarquee" behavior="alternate" scrollamount="3" style="display:none; font-weight:900; color:#ef4444; letter-spacing:2px; font-size:0.9rem; margin:0; padding:0; min-width: 100px;"></marquee>
+                </div>
+            </div>
+            
+            <!-- KOTAK PESAN TAMBAHAN (TEKS BERJALAN 2) -->
+            <div id="headerWaktuPesanContainer" style="display:none; width:100%; align-items:center; justify-content:center; background:#ffffff; border-radius:6px; padding:4px 10px; border: 1px solid #3b82f6; box-shadow:0 2px 4px rgba(0,0,0,0.2); overflow:hidden;">
+                <marquee id="headerWaktuPesan" style="font-weight:800; color:#1d4ed8; font-size:0.8rem; letter-spacing: 0.5px; margin:0; padding:0; width: 100%;"></marquee>
+            </div>
         </div>
         
-        <div style="flex:1; display:flex; flex-direction:column; gap:0.4rem; min-width:280px; max-width:650px;">
-            <div style="width:100%; overflow:hidden; background:rgba(0,0,0,0.2); border-radius:6px; padding:4px 10px; border: 1px solid rgba(255,255,255,0.1);">
-                <marquee id="headerMarquee" style="color:#fcd34d; font-weight:700; font-size:0.85rem; letter-spacing: 0.5px;"></marquee>
-            </div>
-            <!-- WADAH INFO WAKTU MUNDUR DAN TOKEN -->
-            <div id="headerWaktuContainer" style="display:none; justify-content: space-between; align-items: center; background:rgba(255,255,255,0.1); border-radius:6px; padding:4px 10px; border: 1px solid rgba(255,255,255,0.2); font-size: 0.8rem; color: #fff;">
-                <div style="font-weight: bold; color: #facc15; white-space: nowrap;">⏳ Sisa Waktu: <span id="headerSisaWaktu" style="font-size:0.9rem;">-</span></div>
-                <marquee id="headerWaktuPesan" style="font-style: italic; color: #bfdbfe; font-size: 0.75rem; text-align:center; flex:1; padding: 0 10px;"></marquee>
-                <div style="font-weight: bold; color: #4ade80; white-space: nowrap; background: rgba(0,0,0,0.25); padding: 2px 8px; border-radius: 4px;">TOKEN: <span id="headerTokenString" style="letter-spacing: 1px;">***</span></div>
-            </div>
+        <!-- Bagian Kanan (Gambar Banner) -->
+        <div style="flex:2; min-width:280px; min-height:110px; background: rgba(0,0,0,0.1); border-radius: 8px; border: 1px solid rgba(255,255,255,0.2); overflow: hidden; display: flex; align-items: center; justify-content: center; position: relative; box-shadow: inset 0 2px 5px rgba(0,0,0,0.2);">
+            <img id="headerImageBanner" src="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:fill; display:none; z-index:0;" alt="Banner Header" onerror="this.style.display='none'">
+            <div id="headerImageBannerPlaceholder" style="position:relative; z-index:1; color: rgba(255,255,255,0.4); font-weight: 800; letter-spacing: 2px; font-size: 1.2rem;">BANNER HEADER</div>
         </div>
+        
+      </div>
 
-        <div class="topbar-actions" style="display:flex; align-items:center; gap: 0.75rem;">
-          <button type="button" class="btn btn-outline btn-sm" id="btnToggleDarkMode" style="display: none; background:rgba(255,255,255,0.12);color:#fff;border-color:rgba(255,255,255,0.28);">🌙 Mode Gelap</button>
-          <button type="button" class="btn btn-success btn-sm" id="btnSyncGas" style="display: none;">☁️ Sinkronisasi GAS</button>
-        </div>
+      <!-- Teks Berjalan Utama Memanjang Penuh di Bawah -->
+      <div style="width:100%; overflow:hidden; background:rgba(0,0,0,0.2); border-radius:6px; padding:4px 10px; border: 1px solid rgba(255,255,255,0.1);">
+          <marquee id="headerMarquee" style="color:#fcd34d; font-weight:700; font-size:0.85rem; letter-spacing: 0.5px; margin-bottom:-3px;"></marquee>
+      </div>
+
+      <div class="topbar-actions" style="position: absolute; right: 1.25rem; top: 0.85rem; z-index: 10;">
+        <button type="button" class="btn btn-outline btn-sm" id="btnToggleDarkMode" style="display: none; background:rgba(255,255,255,0.12);color:#fff;border-color:rgba(255,255,255,0.28);">🌙 Mode Gelap</button>
+        <button type="button" class="btn btn-success btn-sm" id="btnSyncGas" style="display: none;">☁️ Sinkronisasi GAS</button>
       </div>
     </header>
 
@@ -607,11 +629,11 @@
           <div id="liveChatMessages" class="chat-messages"></div>
         </div>
 
+        <button type="button" class="nav-btn" data-tab="tab-jadwal-view">📅 Jadwal Asesmen</button>
         <button type="button" class="nav-btn" data-tab="tab-dashboard">📊 DATA PRESENSI</button>
         <button type="button" class="nav-btn" data-tab="tab-laporan-pengawas" style="--btn-color-light: #fcd34d; --btn-color-main: #f59e0b; --btn-color-dark: #b45309;">📝 Laporan Pengawas</button>
         <button type="button" class="nav-btn" data-tab="tab-galeri-asesmen" style="--btn-color-light: #fbcfe8; --btn-color-main: #ec4899; --btn-color-dark: #be185d;">🖼️ Galeri Asesmen</button>
         <button type="button" class="nav-btn" data-tab="tab-buku-induk">📘 Peserta Asesmen</button>
-        <button type="button" class="nav-btn" data-tab="tab-jadwal-view">📅 Jadwal Asesmen</button>
         <button type="button" class="nav-btn" data-tab="tab-kartu-pengawas" style="--btn-color-light: #fba11b; --btn-color-main: #f59e0b; --btn-color-dark: #d97706;">🪪 Kartu Pengawas</button>
         <button type="button" class="nav-btn" data-tab="tab-panitia">🪪 Kartu Panitia</button>
 
@@ -625,7 +647,7 @@
         <button type="button" class="nav-btn setting-btn" data-tab="tab-pengaturan-link" style="display:none;">🔗 CCTV, Presensi & Nilai</button>
         <button type="button" class="nav-btn setting-btn" data-tab="tab-jadwal" style="display:none;">📅 Ubah Jadwal</button>
         <button type="button" class="nav-btn setting-btn" data-tab="tab-kartu" style="display:none;">🪪 Ubah Kartu</button>
-        <button type="button" class="nav-btn setting-btn" data-tab="tab-seting-waktu" style="display:none;">⏱️ Ubah Waktu/Tautan Soal</button>
+        <button type="button" class="nav-btn setting-btn" data-tab="tab-seting-waktu" style="display:none;">⏱️ UBAH TOKEN/TAUTAN SOAL</button>
         <button type="button" class="nav-btn setting-btn" data-tab="tab-bank-soal" style="display:none;">📁 BANK SOAL</button>
         <button type="button" class="nav-btn setting-btn" data-tab="tab-pengaturan" style="display:none;">⚙️ Ubah Pengaturan</button>
       </nav>
@@ -829,18 +851,26 @@
         
         <!-- ================= HIGH-TECH NEON DASHBOARD ================= -->
         <style>
-          .neon-dashboard { background: #0b1120; color: #f1f5f9; border-radius: 16px; padding: 1.25rem; box-shadow: inset 0 0 40px rgba(0,0,0,0.8), 0 0 15px rgba(59, 130, 246, 0.2); border: 1px solid #1e293b; margin-bottom: 1.5rem; font-family: 'Inter', sans-serif; position: relative; overflow: hidden; page-break-inside: avoid; }
-          .neon-dashboard::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(59,130,246,0.05) 0%, transparent 60%); pointer-events: none; animation: pulseGlow 4s infinite alternate; z-index:0; }
+          /* Latar Tab DATA PRESENSI: Gradasi Biru Muda ke Hijau Muda */
+          #tab-dashboard {
+            background: linear-gradient(180deg, #7dd3fc 0%, #bae6fd 35%, #bbf7d0 70%, #86efac 100%);
+            border-radius: 18px;
+            padding: 1.25rem;
+            box-shadow: 0 10px 30px rgba(14, 116, 144, 0.18);
+          }
+
+          .neon-dashboard { background: linear-gradient(135deg, rgba(12, 74, 110, 0.84) 0%, rgba(17, 94, 89, 0.78) 55%, rgba(20, 83, 45, 0.76) 100%); backdrop-filter: blur(10px); color: #f1f5f9; border-radius: 16px; padding: 1.25rem; box-shadow: inset 0 0 30px rgba(255,255,255,0.15), 0 8px 24px rgba(12, 74, 110, 0.22); border: 1px solid rgba(255,255,255,0.3); margin-bottom: 1.5rem; font-family: 'Inter', sans-serif; position: relative; overflow: hidden; page-break-inside: avoid; }
+          .neon-dashboard::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(186,230,253,0.16) 0%, transparent 60%); pointer-events: none; animation: pulseGlow 4s infinite alternate; z-index:0; }
           @keyframes pulseGlow { 0% { opacity: 0.5; } 100% { opacity: 1; } }
           
           @keyframes gradientText { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-          .gradient-text-anim { background: linear-gradient(270deg, #38bdf8, #818cf8, #34d399, #f472b6); background-size: 300% 300%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: gradientText 5s ease infinite; text-shadow: none; font-size: 1.15rem; font-weight: 900; letter-spacing: 1px; }
+          .gradient-text-anim { background: linear-gradient(270deg, #bae6fd, #fde047, #a7f3d0, #7dd3fc); background-size: 300% 300%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: gradientText 5s ease infinite; text-shadow: none; font-size: 1.15rem; font-weight: 900; letter-spacing: 1px; }
 
-          .neon-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 0.75rem; z-index: 2; position: relative; }
-          .neon-title { font-size: 1.15rem; font-weight: 900; color: #38bdf8; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
+          .neon-header { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 0.75rem; z-index: 2; position: relative; }
+          .neon-title { font-size: 1.15rem; font-weight: 900; color: #bae6fd; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
           .neon-filters { display: flex; gap: 8px; flex-wrap: wrap; }
-          .neon-filters select { background: #0f172a; color: #38bdf8; border: 1px solid #38bdf8; padding: 0.35rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; outline: none; box-shadow: 0 0 5px rgba(56, 189, 248, 0.3); transition: all 0.2s ease; cursor:pointer;}
-          .neon-filters select:focus, .neon-filters select:hover { box-shadow: 0 0 10px rgba(56, 189, 248, 0.8); background: #1e293b; }
+          .neon-filters select { background: #0c4a6e; color: #e0f2fe; border: 1px solid #38bdf8; padding: 0.35rem 0.6rem; border-radius: 6px; font-size: 0.75rem; font-weight: 700; outline: none; box-shadow: 0 0 5px rgba(56, 189, 248, 0.35); transition: all 0.2s ease; cursor:pointer;}
+          .neon-filters select:focus, .neon-filters select:hover { box-shadow: 0 0 10px rgba(56, 189, 248, 0.8); background: #0f766e; }
           
           .neon-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1rem; z-index: 2; position: relative; }
           .neon-grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem; z-index: 2; position: relative; }
@@ -848,33 +878,57 @@
           .neon-grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 1rem; margin-bottom: 1rem; z-index: 2; position: relative; }
           @media (max-width: 899px) { .neon-grid-2 { grid-template-columns: 1fr; } }
           
-          .neon-card { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 1rem; box-shadow: inset 0 2px 10px rgba(255,255,255,0.02), 0 4px 6px rgba(0,0,0,0.3); transition: transform 0.3s, box-shadow 0.3s; position: relative; overflow: hidden; display: flex; flex-direction: column; }
-          .neon-card:hover { transform: translateY(-3px); box-shadow: inset 0 2px 10px rgba(255,255,255,0.05), 0 8px 15px rgba(0,0,0,0.4); border-color: var(--neon-color); }
-          .neon-card::before { content: ''; position: absolute; top:0; left:0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--neon-color), transparent); opacity: 0.7; }
-          .neon-label { font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700; margin-bottom: 0.4rem; border-bottom: 1px dashed rgba(255,255,255,0.1); padding-bottom: 4px; }
-          .neon-value { font-size: 2.2rem; font-weight: 900; color: #ffffff; text-shadow: 0 0 10px var(--neon-color); line-height: 1.1; margin-top: auto; }
+          .neon-card { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.28); border-radius: 14px; padding: 1rem; box-shadow: inset 0 2px 10px rgba(255,255,255,0.18), 0 6px 14px rgba(15,23,42,0.28); transition: transform 0.3s, box-shadow 0.3s; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+          .neon-card:hover { transform: translateY(-4px); box-shadow: inset 0 2px 12px rgba(255,255,255,0.25), 0 10px 20px rgba(15,23,42,0.35); border-color: #ffffff; }
+          .neon-card::before { content: ''; position: absolute; top:0; left:0; width: 100%; height: 3px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.85), transparent); opacity: 0.85; }
+          .neon-label { font-size: 0.72rem; color: #ffffff; text-shadow: 0 1px 2px rgba(0,0,0,0.35); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 800; margin-bottom: 0.45rem; border-bottom: 1px dashed rgba(255,255,255,0.38); padding-bottom: 5px; }
+          .neon-value { font-size: 2.2rem; font-weight: 900; color: #ffffff; text-shadow: 0 2px 8px rgba(0,0,0,0.3); line-height: 1.1; margin-top: auto; }
+
+          /* Warna Ceria Berbeda-beda untuk Setiap Kotak CCTV */
+          .cctv-wrapper-animated .neon-grid-4 .neon-card:nth-child(1) { background: linear-gradient(135deg, #e11d48 0%, #fb7185 100%) !important; }
+          .cctv-wrapper-animated .neon-grid-4 .neon-card:nth-child(2) { background: linear-gradient(135deg, #d97706 0%, #fbbf24 100%) !important; }
+          .cctv-wrapper-animated .neon-grid-4 .neon-card:nth-child(3) { background: linear-gradient(135deg, #059669 0%, #34d399 100%) !important; }
+          .cctv-wrapper-animated .neon-grid-4 .neon-card:nth-child(4) { background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%) !important; }
+
+          /* Warna Ceria Kotak Grafik Distribusi Kehadiran */
+          #neonDashboard > .neon-card:nth-of-type(1) { background: linear-gradient(135deg, #1e1b4b 0%, #3730a3 50%, #0284c7 100%) !important; }
+          #neonDashboard > .neon-card:nth-of-type(1) .neon-bar-label { color: #ffffff !important; }
+
+          /* Warna Ceria Berbeda-beda untuk 4 Kotak Ringkasan Kehadiran */
+          #neonDashboard > .neon-grid-4 .neon-card:nth-child(1) { background: linear-gradient(135deg, #059669 0%, #10b981 55%, #34d399 100%) !important; }
+          #neonDashboard > .neon-grid-4 .neon-card:nth-child(2) { background: linear-gradient(135deg, #e11d48 0%, #f43f5e 55%, #fb7185 100%) !important; }
+          #neonDashboard > .neon-grid-4 .neon-card:nth-child(3) { background: linear-gradient(135deg, #d97706 0%, #f59e0b 55%, #fbbf24 100%) !important; }
+          #neonDashboard > .neon-grid-4 .neon-card:nth-child(4) { background: linear-gradient(135deg, #0284c7 0%, #0ea5e9 55%, #38bdf8 100%) !important; }
+
+          /* Warna Ceria Berbeda-beda untuk 3 Kotak Analitik */
+          #neonDashboard > .neon-grid-3 .neon-card:nth-child(1) { background: linear-gradient(135deg, #6d28d9 0%, #8b5cf6 55%, #c084fc 100%) !important; }
+          #neonDashboard > .neon-grid-3 .neon-card:nth-child(2) { background: linear-gradient(135deg, #ea580c 0%, #f97316 55%, #fb923c 100%) !important; }
+          #neonDashboard > .neon-grid-3 .neon-card:nth-child(3) { background: linear-gradient(135deg, #0f766e 0%, #14b8a6 55%, #2dd4bf 100%) !important; }
+
+          /* Warna Ceria Kotak Top 3 Per Kelas */
+          #neonDashboard > .neon-card:last-of-type { background: linear-gradient(135deg, #1d4ed8 0%, #4f46e5 55%, #9333ea 100%) !important; }
           
           .neon-pie-container { display: flex; align-items: center; justify-content: space-around; gap: 1rem; margin-top: 0.5rem; flex:1; }
           .neon-pie { width: 75px; height: 75px; border-radius: 50%; background: conic-gradient(var(--neon-color) var(--pct), #1e293b 0); display: flex; align-items: center; justify-content: center; position: relative; box-shadow: 0 0 15px rgba(56, 189, 248, 0.3); }
           .neon-pie::after { content: ''; position: absolute; inset: 8px; background: #0f172a; border-radius: 50%; }
           .neon-pie-inner { position: relative; z-index: 2; font-size: 0.8rem; font-weight: 900; color: #fff; text-shadow: 0 0 5px rgba(255,255,255,0.5); }
           
-          .neon-bar-container { display: flex; align-items: flex-end; justify-content: space-around; gap: 8px; height: 140px; margin-top: 1rem; padding-bottom: 25px; border-bottom: 1px solid #334155; position: relative; flex:1; }
+          .neon-bar-container { display: flex; align-items: flex-end; justify-content: space-around; gap: 8px; height: 140px; margin-top: 1rem; padding-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.35); position: relative; flex:1; }
           .neon-bar { flex: 1; max-width: 45px; background: linear-gradient(0deg, rgba(15,23,42,0) 0%, var(--neon-color) 100%); border-radius: 4px 4px 0 0; position: relative; transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1); border-top: 2px solid #fff; box-shadow: 0 -5px 15px var(--neon-color); }
           .neon-bar:hover { filter: brightness(1.3); cursor:pointer; }
-          .neon-bar-label { position: absolute; bottom: -22px; left: 50%; transform: translateX(-50%); font-size: 0.6rem; color: #94a3b8; white-space: nowrap; font-weight: 800; }
+          .neon-bar-label { position: absolute; bottom: -22px; left: 50%; transform: translateX(-50%); font-size: 0.6rem; color: #ffffff; white-space: nowrap; font-weight: 800; }
           .neon-bar-val { position: absolute; top: -22px; left: 50%; transform: translateX(-50%); font-size: 0.75rem; color: #fff; font-weight: 900; text-shadow: 0 0 5px var(--neon-color); }
           
-          .neon-list { max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem; scrollbar-width: thin; scrollbar-color: var(--neon-color) #0f172a; padding-right: 4px; margin-top:0.5rem; }
-          .neon-list-item { display: flex; align-items: center; gap: 0.75rem; background: rgba(0,0,0,0.3); padding: 0.5rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); transition: background 0.2s; }
-          .neon-list-item:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.2); }
-          .neon-list-img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 1px solid var(--neon-color); box-shadow: 0 0 5px var(--neon-color); background:#1e293b; }
+          .neon-list { max-height: 200px; overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem; scrollbar-width: thin; scrollbar-color: #ffffff rgba(15,23,42,0.4); padding-right: 4px; margin-top:0.5rem; }
+          .neon-list-item { display: flex; align-items: center; gap: 0.75rem; background: rgba(15, 23, 42, 0.42); padding: 0.5rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.22); transition: background 0.2s; }
+          .neon-list-item:hover { background: rgba(15, 23, 42, 0.6); border-color: rgba(255,255,255,0.45); }
+          .neon-list-img { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid #ffffff; box-shadow: 0 2px 6px rgba(0,0,0,0.25); background:#1e293b; }
           .neon-list-info { flex: 1; overflow: hidden; }
           .neon-list-name { font-size: 0.75rem; font-weight: 800; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 1px 2px rgba(0,0,0,0.5); margin-bottom:2px; }
-          .neon-list-meta { font-size: 0.65rem; color: #94a3b8; font-weight: 600; display:flex; justify-content:space-between; }
-          .neon-list-badge { font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; background: rgba(255,255,255,0.1); color: var(--neon-color); border: 1px solid var(--neon-color); font-weight: 800; }
+          .neon-list-meta { font-size: 0.65rem; color: #f8fafc; font-weight: 700; display:flex; justify-content:space-between; }
+          .neon-list-badge { font-size: 0.6rem; padding: 2px 6px; border-radius: 4px; background: rgba(15,23,42,0.5); color: #fef08a; border: 1px solid rgba(255,255,255,0.4); font-weight: 800; }
           
-          /* Pengaturan ulang stat lama menjadi lebih compact */
+          /* Pengaturan ulang stat lama menjadi lebih compact dengan warna ceria berbeda tiap kotak */
           .compact-stats { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem; }
           
           /* EFEK 3D GELEMBUNG ANIMASI */
@@ -883,21 +937,32 @@
               border-radius: 22px; 
               background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
               box-shadow: 
-                  6px 6px 14px rgba(15,23,42,0.06), 
-                  -6px -6px 14px #ffffff, 
-                  inset 3px 3px 8px rgba(255,255,255,0.9), 
-                  inset -3px -3px 8px rgba(15,23,42,0.04);
-              border: 1px solid rgba(255,255,255,0.8);
+                  0 6px 14px rgba(15,23,42,0.14), 
+                  inset 3px 3px 8px rgba(255,255,255,0.85), 
+                  inset -3px -3px 8px rgba(15,23,42,0.06);
+              border: 1px solid rgba(255,255,255,0.85);
               transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
               position: relative;
               overflow: hidden;
               z-index: 1;
           }
+          .compact-stats .stat-card:nth-child(1) { background: linear-gradient(135deg, #e0f2fe 0%, #7dd3fc 100%) !important; border-color: #38bdf8 !important; }
+          .compact-stats .stat-card:nth-child(2) { background: linear-gradient(135deg, #f3e8ff 0%, #d8b4fe 100%) !important; border-color: #c084fc !important; }
+          .compact-stats .stat-card:nth-child(3) { background: linear-gradient(135deg, #dcfce7 0%, #86efac 100%) !important; border-color: #4ade80 !important; }
+          .compact-stats .stat-card:nth-child(4) { background: linear-gradient(135deg, #fef9c3 0%, #fde047 100%) !important; border-color: #facc15 !important; }
+          .compact-stats .stat-card:nth-child(5) { background: linear-gradient(135deg, #ffedd5 0%, #fdba74 100%) !important; border-color: #fb923c !important; }
+          .compact-stats .stat-card:nth-child(6) { background: linear-gradient(135deg, #f3e8ff 0%, #d8b4fe 100%) !important; border-color: #c084fc !important; }
+          .compact-stats .stat-card:nth-child(7) { background: linear-gradient(135deg, #ffe4e6 0%, #fda4af 100%) !important; border-color: #fb7185 !important; }
+
+          .compact-stats .stat-card .stat-label { color: #334155 !important; font-weight: 800; }
+          .compact-stats .stat-card .stat-value { color: #0f172a !important; }
+          .compact-stats .stat-card .stat-meta { color: #334155 !important; font-weight: 600; }
+
           /* Pantulan cahaya kaca (Glass Flare) di atas gelembung */
           .compact-stats .stat-card::before {
               content: '';
               position: absolute; top: 4px; left: 10px; right: 10px; height: 35%;
-              background: linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0) 100%);
+              background: linear-gradient(180deg, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0) 100%);
               border-radius: 20px 20px 0 0;
               pointer-events: none;
               z-index: -1;
@@ -905,26 +970,36 @@
           .compact-stats .stat-card:hover { 
               transform: translateY(-8px) scale(1.02);
               box-shadow: 
-                  10px 10px 20px rgba(15,23,42,0.1), 
-                  -10px -10px 20px #ffffff, 
+                  0 12px 22px rgba(15,23,42,0.2), 
                   inset 3px 3px 8px rgba(255,255,255,1), 
-                  inset -3px -3px 8px rgba(15,23,42,0.06);
+                  inset -3px -3px 8px rgba(15,23,42,0.08);
           }
           .compact-stats .clickable-stat {
               cursor: pointer;
-              border-color: #bfdbfe;
-          }
-          .compact-stats .clickable-stat:hover {
-              border-color: #60a5fa;
           }
           .compact-stats .clickable-stat:active {
               transform: translateY(2px) scale(0.98);
-              box-shadow: 2px 2px 5px rgba(15,23,42,0.1), -2px -2px 5px #ffffff, inset 4px 4px 10px rgba(15,23,42,0.05), inset -4px -4px 10px rgba(255,255,255,0.9);
+              box-shadow: 0 3px 6px rgba(15,23,42,0.14), inset 4px 4px 10px rgba(15,23,42,0.06), inset -4px -4px 10px rgba(255,255,255,0.9);
           }
 
           .compact-stats .stat-label { font-size: 0.65rem; margin-bottom: 0.2rem; }
           .compact-stats .stat-value { font-size: 1.25rem; }
           .compact-stats .stat-meta { font-size: 0.55rem; }
+
+          /* Kotak Statistik Interaktif Peserta Asesmen */
+          #tab-dashboard > .card:last-of-type {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(236, 253, 245, 0.96) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            box-shadow: 0 8px 20px rgba(15, 118, 110, 0.14);
+          }
+          #tab-dashboard > .card:last-of-type .chart-row:nth-child(odd) {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-color: #bae6fd;
+          }
+          #tab-dashboard > .card:last-of-type .chart-row:nth-child(even) {
+            background: linear-gradient(135deg, #fdf4ff 0%, #fae8ff 100%);
+            border-color: #f5d0fe;
+          }
         </style>
         
         <div class="neon-dashboard" id="neonDashboard">
@@ -1004,7 +1079,7 @@
                 <div class="neon-card" style="--neon-color:#4ade80;">
                     <div class="neon-label">TOTAL PINDAI QR CODE</div>
                     <div class="neon-value" id="neonGlobalHadir">0</div>
-                    <div style="font-size:0.75rem; color:#4ade80; margin-top:4px; font-weight:700;">
+                    <div style="font-size:0.75rem; color:#fef08a; margin-top:4px; font-weight:800; text-shadow:0 1px 2px rgba(0,0,0,0.3);">
                         <span id="neonGlobalHadirPct">0%</span> dari <span id="neonGlobalTotal" style="color:#fff;">0</span> Siswa Aktif
                     </div>
                 </div>
@@ -1012,7 +1087,7 @@
                 <div class="neon-card" style="--neon-color:#f43f5e;">
                     <div class="neon-label">BELUM TERPINDAI</div>
                     <div class="neon-value" id="neonGlobalAlpha">0</div>
-                    <div style="font-size:0.75rem; color:#f43f5e; margin-top:4px; font-weight:700;">
+                    <div style="font-size:0.75rem; color:#fef08a; margin-top:4px; font-weight:800; text-shadow:0 1px 2px rgba(0,0,0,0.3);">
                         <span id="neonGlobalAlphaPct">0%</span> dari Total Siswa
                     </div>
                 </div>
@@ -1248,6 +1323,7 @@
                 <tr>
                   <th>No. Asesmen</th>
                   <th>NIS / NISN</th>
+                  <th style="width: 50px; text-align: center;">Foto</th>
                   <th>Nama</th>
                   <th>L/P</th>
                   <th>Kelas</th>
@@ -1355,6 +1431,12 @@
               </select>
             </div>
             <div class="form-group">
+              <label class="form-label">Filter Ruang</label>
+              <select id="kartuRuangViewFilter" class="form-control">
+                <option value="ALL">Semua Ruangan (Cetak Sekaligus)</option>
+              </select>
+            </div>
+            <div class="form-group">
               <label class="form-label">Orientasi Kertas A4</label>
               <select id="printOrienKartuView" class="form-control">
                 <option value="portrait">Portrait</option>
@@ -1424,26 +1506,46 @@
 
       <!-- TAB: PANITIA -->
       <section id="tab-panitia" class="tab-section">
-        <div class="card">
-          <div class="card-header" style="border-bottom: none; margin-bottom: 0;">
+        <div class="card no-print" style="margin-bottom:1.25rem;">
+          <div class="card-header">
             <div>
               <div class="card-title">🪪 Kartu Kepanitiaan Asesmen</div>
               <div class="card-subtitle">Daftar Panitia ditarik otomatis dari Sumber Data CSV (Kolom M). Klik kotak kartu untuk melihat profil & rincian tugas.</div>
             </div>
+            <button type="button" class="btn btn-primary btn-sm" id="btnCetakKartuPanitia">🖨️ OK Lanjut Cetak/Unduh (A4)</button>
           </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Orientasi Kertas A4</label>
+              <select id="printOrienKartuPanitia" class="form-control">
+                <option value="portrait">Portrait</option>
+                <option value="landscape">Landscape</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Skala Cetak (%)</label>
+              <input type="number" id="printScaleKartuPanitia" class="form-control" value="100" min="50" max="150" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Kartu per Halaman A4</label>
+              <input type="number" id="perPageKartuPanitia" class="form-control" value="8" min="1" max="20" />
+            </div>
+          </div>
+        </div>
           
-          <div style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border: 1px solid #bfdbfe; border-radius: 12px; padding: 1.25rem; margin: 0 1.15rem 1.15rem 1.15rem; color: #1e40af; box-shadow: inset 0 2px 4px rgba(255,255,255,0.5);">
-              <h4 style="font-size: 0.95rem; font-weight: 800; margin-bottom: 0.5rem; text-transform: uppercase;">📋 Ketentuan Umum</h4>
-              <ol style="margin-left: 1.2rem; font-size: 0.8rem; line-height: 1.6; font-weight: 600;">
-                  <li>Setiap personel panitia wajib melaksanakan tugas dengan penuh tanggung jawab, disiplin, dan menjunjung tinggi integritas.</li>
-                  <li>Setiap bidang wajib berkoordinasi dengan ketua panitia dan bidang terkait.</li>
-                  <li>Setiap permasalahan yang tidak dapat diselesaikan pada tingkat bidang dilaporkan kepada ketua panitia.</li>
-                  <li>Seluruh personel wajib menjaga kerahasiaan soal, kunci jawaban, akun peserta, dan hasil asesmen.</li>
-                  <li>Setiap bidang wajib menyampaikan laporan pelaksanaan tugas sebagai bahan evaluasi dan pertanggungjawaban kegiatan.</li>
-              </ol>
-          </div>
+        <div style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border: 1px solid #bfdbfe; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.15rem; color: #1e40af; box-shadow: inset 0 2px 4px rgba(255,255,255,0.5);">
+            <h4 style="font-size: 0.95rem; font-weight: 800; margin-bottom: 0.5rem; text-transform: uppercase;">📋 Ketentuan Umum</h4>
+            <ol style="margin-left: 1.2rem; font-size: 0.8rem; line-height: 1.6; font-weight: 600;">
+                <li>Setiap personel panitia wajib melaksanakan tugas dengan penuh tanggung jawab, disiplin, dan menjunjung tinggi integritas.</li>
+                <li>Setiap bidang wajib berkoordinasi dengan ketua panitia dan bidang terkait.</li>
+                <li>Setiap permasalahan yang tidak dapat diselesaikan pada tingkat bidang dilaporkan kepada ketua panitia.</li>
+                <li>Seluruh personel wajib menjaga kerahasiaan soal, kunci jawaban, akun peserta, dan hasil asesmen.</li>
+                <li>Setiap bidang wajib menyampaikan laporan pelaksanaan tugas sebagai bahan evaluasi dan pertanggungjawaban kegiatan.</li>
+            </ol>
+        </div>
 
-          <div id="gridPanitia" class="panitia-grid"></div>
+        <div class="a4-scroll-wrapper">
+          <div id="cardsContainerPanitiaGrid" style="display:flex; flex-direction:column; gap:20px; width:100%; align-items:center;"></div>
         </div>
       </section>
 
@@ -1595,17 +1697,28 @@
               <input type="text" id="waktuTokenString" class="form-control" placeholder="Contoh: AB12CD" style="font-weight:bold; letter-spacing:1px;" />
             </div>
             <div class="form-group" style="grid-column: 1 / -1;">
-              <label class="form-label">Teks Berjalan 1 (Header Utama)</label>
-              <input type="text" id="settingRunningText" class="form-control" placeholder="Masukkan teks pengumuman/informasi utama..." />
-            </div>
-            <div class="form-group" style="grid-column: 1 / -1;">
-              <label class="form-label">Teks Berjalan 2 (Pesan Tambahan dari Panitia)</label>
-              <input type="text" id="waktuPesan" class="form-control" placeholder="Tuliskan pesan penyemangat atau peringatan (Tampil di panel waktu)..." />
+              <div style="display:flex; gap:0.75rem;">
+                <button class="btn btn-primary" id="btnMulaiWaktu">▶️ Mulai Waktu / Terapkan</button>
+                <button class="btn btn-danger-soft" id="btnHentikanWaktu">⏹️ Hentikan / Reset Waktu</button>
+              </div>
             </div>
           </div>
-          <div style="display:flex; gap:0.75rem; margin-top:1.25rem;">
-            <button class="btn btn-primary" id="btnMulaiWaktu">▶️ Mulai Waktu / Terapkan</button>
-            <button class="btn btn-danger-soft" id="btnHentikanWaktu">⏹️ Hentikan / Reset Waktu</button>
+          
+          <div style="margin-top: 1rem; border-top: 1px dashed var(--border); padding-top: 1.25rem;">
+              <h4 style="font-size: 0.95rem; font-weight: 800; margin-bottom: 0.75rem; color: var(--primary);">📢 Pengaturan Teks Berjalan (Info Live)</h4>
+              <div class="form-grid">
+                <div class="form-group" style="grid-column: 1 / -1;">
+                  <label class="form-label">Teks Berjalan 1 (Header Utama)</label>
+                  <input type="text" id="settingRunningText" class="form-control" placeholder="Masukkan teks pengumuman/informasi utama..." />
+                </div>
+                <div class="form-group" style="grid-column: 1 / -1;">
+                  <label class="form-label">Teks Berjalan 2 (Pesan Tambahan dari Panitia)</label>
+                  <input type="text" id="waktuPesan" class="form-control" placeholder="Tuliskan pesan penyemangat atau peringatan (Tampil di panel waktu)..." />
+                </div>
+                <div class="form-group">
+                  <button class="btn btn-success" id="btnSimpanTeksBerjalan">💾 Simpan Teks Berjalan</button>
+                </div>
+              </div>
           </div>
         </div>
 
@@ -1764,10 +1877,10 @@
           <div class="a4-kertas portrait">
             <div class="a4-content" id="denahPaperContent" style="display:block; padding: 1.5cm; zoom: 95%; box-sizing: border-box; width: 100%; height: 100%;">
               <div class="denah-box">
-                <div class="denah-board">PAPAN TULIS / DEPAN</div>
                 <div id="denahTitle" style="font-weight: 800; font-size: 1.15rem; color: #0f172a; margin: 0.5rem 0; text-transform: uppercase;">DENAH TEMPAT DUDUK RUANG</div>
                 <div class="denah-grid" id="denahGridContainer"></div>
                 <div class="denah-pengawas">PENGAWAS</div>
+                <div class="denah-board" style="margin-top: 4px;">PAPAN TULIS / DEPAN</div>
               </div>
             </div>
           </div>
@@ -1934,7 +2047,23 @@
                     <tbody id="tableGuruBody"></tbody>
                 </table>
             </div>
+
             <hr style="border-color:var(--border); margin:1.5rem 0 1rem;" />
+
+            <div class="card-header" style="border:none; padding:0; margin-bottom:0.75rem;"><div><div class="card-title">🖼️ Pengaturan Gambar Banner Header</div></div></div>
+            <p style="font-size:0.8rem; margin-bottom:1rem;">Atur gambar banner yang akan tampil di area kanan atas layar secara global. Tekan simpan untuk menyinkronkannya ke Cloud.</p>
+            <div class="form-group">
+                <label class="form-label">Tautan / Unggah Gambar Banner</label>
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                    <input type="text" id="settingHeaderBannerUrl" class="form-control" style="min-width:200px; flex:1;" placeholder="Link gambar / akan terisi otomatis setelah unggah" />
+                    <input type="file" id="settingHeaderBannerFile" accept="image/*" style="display:none;" />
+                    <button class="btn btn-outline" id="btnUploadHeaderBanner" onclick="document.getElementById('settingHeaderBannerFile').click()">+ Unggah</button>
+                    <button class="btn btn-success" id="btnSaveHeaderBanner">💾 Simpan Gambar Header</button>
+                </div>
+            </div>
+
+            <hr style="border-color:var(--border); margin:1.5rem 0 1rem;" />
+
             <div style="display:flex; gap:0.5rem;">
                 <button class="btn btn-outline" id="btnBackupJson">📥 Backup JSON</button>
                 <button class="btn btn-danger-soft" id="btnResetData">♻️ Reset Data</button>
@@ -2158,6 +2287,7 @@
             tahunAjaran: '2026/2027',
             logoKiriUrl: 'https://res.cloudinary.com/dqztkjx8i/image/upload/v1760327080/Lambang_Kabupaten_Muara_Enim_g9pdvy.gif',
             logoKananUrl: 'https://res.cloudinary.com/dqztkjx8i/image/upload/v1760185516/1692069187442-removebg-preview_y1vwbd.png',
+            headerBannerUrl: '',
             runningText: 'Selamat datang di Sistem Informasi dan Manajemen Asesmen Digital SMPN 2 Gelumbang. Akses portal utama =>> bit.ly/guruwali2glb <<=',
             darkMode: false,
             autoSyncCloud: true,
@@ -2182,8 +2312,8 @@
           },
           reports: [], // Tempat menampung data Laporan Pengawas
           teachers: [
-            {kode: '-', nip: '-', nama: 'Budi Santoso, S.Pd.', golru: 'III/c', tupoksi: 'Guru Mapel', tugas1: '-', tugas2: '-', tugas3: '-', role: 'PENGAWAS', password: '', photoUrl: ''},
-            {kode: '-', nip: '-', nama: 'Siti Aminah, M.Pd.', golru: 'IV/a', tupoksi: 'Guru Mapel', tugas1: 'Wali Kelas', tugas2: '-', tugas3: '-', role: 'PANITIA', password: '123', photoUrl: ''}
+            {kode: '-', nip: '-', nama: 'Budi Santoso, S.Pd.', golru: 'III/c', tupoksi: 'Guru Mapel', tugas1: '-', tugas2: '-', tugas3: '-', role: 'PENGAWAS', password: '', photoUrl: '', email: '-'},
+            {kode: '-', nip: '-', nama: 'Siti Aminah, M.Pd.', golru: 'IV/a', tupoksi: 'Guru Mapel', tugas1: 'Wali Kelas', tugas2: '-', tugas3: '-', role: 'PANITIA', password: '123', photoUrl: '', email: '-'}
           ],
           students: [
             { id: 'S1', no_asesmen: '001', nis: '101', nisn: '001', nama: 'Andi', gender: 'L', kelas: 'IX-A', ruang: 'Ruang 1', tempat_lahir: 'Palembang', tgl_lahir: '01 Jan 2012', wali: 'Guru A', guru_wali: 'Guru X', akun_belajar: 'andi@belajar.id', photoUrl: '', qrUrl: '' },
@@ -2274,7 +2404,8 @@
 
       // Fungsi Sinkronisasi Cloud GAS (POST)
       async function syncDataToCloud() {
-          if (!db.settings.gasUrl) return;
+          if (!db.settings.gasUrl || !db.settings.gasUrl.startsWith('http')) return;
+          if (typeof navigator !== 'undefined' && navigator.onLine === false) return;
           try {
               // Buat salinan data (Deep Copy) untuk dikirim ke Cloud
               let cloudDb = JSON.parse(JSON.stringify(db));
@@ -2285,6 +2416,9 @@
                   delete cloudDb.settings.templatesLandscape;
                   delete cloudDb.settings.bgKartuPortrait;
                   delete cloudDb.settings.bgKartuLandscape;
+                  if (cloudDb.settings.headerBannerUrl && cloudDb.settings.headerBannerUrl.startsWith('data:')) {
+                      delete cloudDb.settings.headerBannerUrl;
+                  }
               }
               
               // KOMPRESI PAYLOAD: Hanya kirim ID dan Tautan Foto agar sangat ringan & tidak gagal simpan
@@ -2308,12 +2442,13 @@
               
               await fetch(db.settings.gasUrl, {
                   method: 'POST',
-                  // Mengubah tipe pengiriman agar terhindar dari blokir preflight CORS browser
+                  // Gunakan no-cors agar redirect 302 dari Google Apps Script tidak diblokir browser di iframe/blob
+                  mode: 'no-cors',
                   headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                   body: JSON.stringify({ action: 'saveData', data: cloudDb })
               });
           } catch(e) {
-              console.error("Gagal sinkronisasi otomatis ke GAS", e);
+              console.warn("Sinkronisasi otomatis ke GAS dilewati (mode offline/sandbox):", e.message || e);
           }
       }
 
@@ -2713,7 +2848,7 @@
               }
           } catch(e) {
               if (isManualSync) showToast('Gagal terhubung ke GAS. Cek koneksi.');
-              console.error("Sinkronisasi gagal", e);
+              console.warn("Sinkronisasi gagal:", e.message || e);
           } finally {
               if (isManualSync) {
                   const btn = document.getElementById('btnPullGas');
@@ -2746,7 +2881,8 @@
           if(!csvUrl) return;
           try {
               if(!isSilent) showToast('Mengunduh data Peserta dari Spreadsheet...');
-              const response = await fetch(csvUrl);
+              // Tambahkan cache-busting untuk mencegah TypeError / Failed to Fetch dari browser
+              const response = await fetch(csvUrl + (csvUrl.includes('?') ? '&' : '?') + 't=' + new Date().getTime());
               const csvText = await response.text();
               const arr = parseCSVString(csvText);
               
@@ -2816,7 +2952,8 @@
           if(!csvUrl) return;
           try {
               if(!isSilent) showToast('Mengunduh data Guru & Pegawai...');
-              const response = await fetch(csvUrl);
+              // Tambahkan cache-busting untuk mencegah TypeError / Failed to Fetch dari browser
+              const response = await fetch(csvUrl + (csvUrl.includes('?') ? '&' : '?') + 't=' + new Date().getTime());
               const csvText = await response.text();
               const arr = parseCSVString(csvText);
               
@@ -2843,6 +2980,7 @@
                           kepanitiaan: r[14] || '-',
                           uraian_tugas: r[15] || '-',
                           photo_csv: formatDriveUrl(rawPhotoCsv),
+                          email: r.length > 18 ? (r[18] || '-') : '-',
                           raw: r
                       });
                   }
@@ -2979,15 +3117,36 @@
       // ================= LOGIC WAKTU MUNDUR DAN TOKEN =================
       function updateHeaderWaktu() {
           const w = db.settings.waktu;
+          const pesanContainer = document.getElementById('headerWaktuPesanContainer');
+          const pesanEl = document.getElementById('headerWaktuPesan');
+          
+          // TEKS BERJALAN 2 SELALU TAMPIL INDEPENDEN (TANPA TERPENGARUH RESET WAKTU)
+          if (pesanContainer) pesanContainer.style.display = 'flex'; // Kotak selalu dimunculkan
+          
+          if (w && w.pesan && w.pesan.trim() !== '') {
+              if (pesanEl && pesanEl.textContent !== w.pesan) {
+                  pesanEl.textContent = w.pesan;
+              }
+          } else {
+              if (pesanEl && pesanEl.textContent !== ' ') {
+                  pesanEl.textContent = ' '; // Isi spasi jika kosong agar tinggi kotak tetap rapi
+              }
+          }
+          
+          // LOGIKA WAKTU MUNDUR DAN TOKEN 
           if (!w || !w.isRunning || !w.startTime) {
-              document.getElementById('headerWaktuContainer').style.display = 'none';
+              document.getElementById('headerTimerOnly').style.display = 'none';
+              document.getElementById('headerTokenContainer').style.display = 'none';
               return;
           }
           
-          document.getElementById('headerWaktuContainer').style.display = 'flex';
+          document.getElementById('headerTimerOnly').style.display = 'flex';
+          document.getElementById('headerTokenContainer').style.display = 'flex';
+          
           const now = new Date().getTime();
           const elapsedMs = now - w.startTime;
-          const sisaMs = (w.durasi * 60000) - elapsedMs;
+          const durasiMs = w.durasi * 60000;
+          const sisaMs = durasiMs - elapsedMs;
           
           const sisaEl = document.getElementById('headerSisaWaktu');
           if (sisaMs <= 0) {
@@ -3002,16 +3161,28 @@
           
           const elapsedMinutes = Math.floor(elapsedMs / 60000);
           
-          // Token muncul setelah elapsedMinutes mencapai tokenTrigger
-          if (elapsedMinutes >= w.tokenTrigger) {
-              document.getElementById('headerTokenString').textContent = w.tokenStr || 'RILIS';
-              document.getElementById('headerTokenString').classList.add('token-blink');
+          const tokenStatic = document.getElementById('tokenStatic');
+          const tokenMarquee = document.getElementById('tokenMarquee');
+        
+          // Token muncul setelah waktu rilis tercapai, dan RESET kembali ke "Belum Rilis" 1 menit setelah HABIS
+          if (elapsedMs >= durasiMs + 60000) { 
+              // Jika sudah lewat 1 menit (60000ms) sejak waktu HABIS
+              tokenStatic.style.display = 'block';
+              tokenStatic.textContent = '*** (Belum Rilis)';
+              tokenMarquee.style.display = 'none';
+          } else if (elapsedMinutes >= w.tokenTrigger) {
+              // Jika sudah masuk waktu rilis token
+              tokenStatic.style.display = 'none';
+              tokenMarquee.style.display = 'block';
+              if (tokenMarquee.textContent !== (w.tokenStr || 'RILIS')) {
+                  tokenMarquee.textContent = w.tokenStr || 'RILIS';
+              }
           } else {
-              document.getElementById('headerTokenString').textContent = '*** (Belum)';
-              document.getElementById('headerTokenString').classList.remove('token-blink');
+              // Jika belum saatnya rilis
+              tokenStatic.style.display = 'block';
+              tokenStatic.textContent = '*** (Belum Rilis)';
+              tokenMarquee.style.display = 'none';
           }
-          
-          document.getElementById('headerWaktuPesan').textContent = w.pesan || '';
       }
       setInterval(updateHeaderWaktu, 1000);
 
@@ -3023,7 +3194,9 @@
               if (response.ok) {
                   const cloudData = await response.json();
                   if (cloudData && cloudData.settings) {
-                      db.settings.runningText = cloudData.settings.runningText || db.settings.runningText;
+                      if (cloudData.settings.runningText !== undefined) {
+                          db.settings.runningText = cloudData.settings.runningText;
+                      }
                       if (cloudData.settings.waktu) {
                           db.settings.waktu = cloudData.settings.waktu;
                       }
@@ -3087,8 +3260,8 @@
           db.settings.waktu.durasi = parseInt(document.getElementById('waktuDurasi').value) || 120;
           db.settings.waktu.tokenTrigger = parseInt(document.getElementById('waktuTokenTrigger').value) || 90;
           db.settings.waktu.tokenStr = document.getElementById('waktuTokenString').value || '';
-          db.settings.waktu.pesan = document.getElementById('waktuPesan').value || '';
           
+          db.settings.waktu.pesan = document.getElementById('waktuPesan').value || '';
           db.settings.runningText = document.getElementById('settingRunningText').value || '';
           const marquee = document.getElementById('headerMarquee');
           if (marquee) marquee.textContent = db.settings.runningText || 'Selamat datang di Sistem Informasi dan Manajemen Asesmen Digital SMPN 2 Gelumbang. Akses portal utama =>> bit.ly/guruwali2glb <<=';
@@ -3096,8 +3269,23 @@
           db.settings.waktu.startTime = new Date().getTime();
           db.settings.waktu.isRunning = true;
           saveData();
+          syncDataToCloud(); // Kunci data seketika ke Cloud agar tidak tertimpa refresh
           updateHeaderWaktu();
-          showToast('Penghitung waktu dan token berhasil dimulai!');
+          showToast('Penghitung waktu dan token berhasil dimulai & diamankan ke Cloud!');
+      });
+
+      document.getElementById('btnSimpanTeksBerjalan')?.addEventListener('click', () => {
+          if (!db.settings.waktu) db.settings.waktu = {};
+          db.settings.waktu.pesan = document.getElementById('waktuPesan').value || '';
+          db.settings.runningText = document.getElementById('settingRunningText').value || '';
+          
+          const marquee = document.getElementById('headerMarquee');
+          if (marquee) marquee.textContent = db.settings.runningText || 'Selamat datang di Sistem Informasi dan Manajemen Asesmen Digital SMPN 2 Gelumbang. Akses portal utama =>> bit.ly/guruwali2glb <<=';
+
+          saveData();
+          syncDataToCloud();
+          updateHeaderWaktu();
+          showToast('Teks berjalan berhasil diperbarui tanpa mereset waktu!');
       });
 
       document.getElementById('btnHentikanWaktu')?.addEventListener('click', () => {
@@ -3498,6 +3686,18 @@
           document.getElementById('statTotalPanitia').textContent = jmlPanitia;
           document.getElementById('statTotalExOfficio').textContent = jmlExOfficio;
           
+          // Update Banner Header
+          const bannerImg = document.getElementById('headerImageBanner');
+          const placeholder = document.getElementById('headerImageBannerPlaceholder');
+          if (db.settings.headerBannerUrl && bannerImg) {
+              bannerImg.src = db.settings.headerBannerUrl;
+              bannerImg.style.display = 'block';
+              if(placeholder) placeholder.style.display = 'none';
+          } else if (bannerImg) {
+              bannerImg.style.display = 'none';
+              if(placeholder) placeholder.style.display = 'block';
+          }
+
           renderDashboardCharts();
           renderDashboardLinks();
       }
@@ -3607,10 +3807,16 @@
               const kls = (s.kelas || '-').trim();
               classCounts[kls] = (classCounts[kls] || 0) + 1;
               
+              const initials = (s.nama || 'X').split(' ').slice(0, 2).map(w => w.charAt(0)).join('').toUpperCase();
+              const photoEl = s.photoUrl 
+                  ? `<img src="${s.photoUrl}" style="width:34px; height:34px; border-radius:50%; object-fit:cover; border:1px solid #cbd5e1; display:block; margin:0 auto; box-shadow:0 1px 3px rgba(0,0,0,0.1);" alt="Foto">` 
+                  : `<div style="width:34px; height:34px; border-radius:50%; background:#e2e8f0; border:1px solid #cbd5e1; display:flex; align-items:center; justify-content:center; font-size:0.6rem; font-weight:800; color:#475569; margin:0 auto; box-shadow:0 1px 3px rgba(0,0,0,0.1);">${initials}</div>`;
+
               return `<tr>
                   <td><strong>${s.no_asesmen || '-'}</strong></td>
                   <td>${s.nis || '-'}/${s.nisn || '-'}</td>
-                  <td><strong>${s.nama || '-'}</strong></td>
+                  <td style="text-align: center; vertical-align: middle; cursor: pointer; transition: transform 0.2s;" class="clickable-student" data-student-id="${s.id}" title="Klik untuk pratinjau Kartu Siswa" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">${photoEl}</td>
+                  <td style="cursor: pointer;" class="clickable-student" data-student-id="${s.id}" title="Klik untuk pratinjau Kartu Siswa"><strong style="color:var(--primary); transition: color 0.2s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--primary)'">${s.nama || '-'}</strong></td>
                   <td><span class="badge badge-teal">${s.gender || '-'}</span></td>
                   <td><strong>${s.kelas || '-'}</strong></td>
                   <td><span class="badge badge-blue" style="font-size:0.65rem;">${s.ruang || '-'}</span></td>
@@ -3880,8 +4086,20 @@
         selectView.innerHTML = '<option value="ALL">Semua Kelas (Cetak Sekaligus)</option>' + classes.map(c => `<option value="${c}">${c}</option>`).join('');
         if (classes.includes(currentFilterView) || currentFilterView === 'ALL') selectView.value = currentFilterView;
 
+        const selectRuangView = document.getElementById('kartuRuangViewFilter');
+        const currentRuangFilterView = selectRuangView ? selectRuangView.value : 'ALL';
+        const rooms = [...new Set(db.students.map(s => (s.ruang || '').trim()))].filter(Boolean).sort((a,b) => a.localeCompare(b, undefined, {numeric:true}));
+        if(selectRuangView) {
+            selectRuangView.innerHTML = '<option value="ALL">Semua Ruangan (Cetak Sekaligus)</option>' + rooms.map(r => `<option value="${r}">${r}</option>`).join('');
+            if (rooms.includes(currentRuangFilterView) || currentRuangFilterView === 'ALL') selectRuangView.value = currentRuangFilterView;
+        }
+
         const jenisKartuView = document.getElementById('kartuJenisViewSelect').value;
-        const listView = db.students.filter(s => selectView.value === 'ALL' || (s.kelas || '').trim() === selectView.value);
+        const listView = db.students.filter(s => {
+            const matchKelas = selectView.value === 'ALL' || (s.kelas || '').trim() === selectView.value;
+            const matchRuang = !selectRuangView || selectRuangView.value === 'ALL' || (s.ruang || '').trim() === selectRuangView.value;
+            return matchKelas && matchRuang;
+        });
 
         // --- LOGIC UNTUK TAB KARTU MURID VIEW ONLY ---
         const selectMuridView = document.getElementById('kartuMuridKelasViewFilter');
@@ -3892,8 +4110,8 @@
         const listMuridView = db.students.filter(s => selectMuridView.value === 'ALL' || (s.kelas || '').trim() === selectMuridView.value);
         const orienMurid = document.getElementById('kartuMuridOrientationSelect') ? document.getElementById('kartuMuridOrientationSelect').value : 'portrait';
 
-        const logoKiriHtml = (db.settings.logoKiriUrl || db.settings.logoUrl) ? `<img src="${db.settings.logoKiriUrl || db.settings.logoUrl}" style="width:50px; height:50px; object-fit:contain;" />` : `<svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>`;
-        const logoKananHtml = db.settings.logoKananUrl ? `<img src="${db.settings.logoKananUrl}" style="width:50px; height:50px; object-fit:contain;" />` : `<svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>`;
+        const logoKiriHtml = (db.settings.logoKiriUrl || db.settings.logoUrl) ? `<img src="${db.settings.logoKiriUrl || db.settings.logoUrl}" style="width:50px; height:50px; object-fit:contain;" />` : `<svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>`;
+        const logoKananHtml = db.settings.logoKananUrl ? `<img src="${db.settings.logoKananUrl}" style="width:50px; height:50px; object-fit:contain;" />` : `<svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>`;
 
         let fullAlamat = db.settings.alamat || '';
         let line1Alamat = fullAlamat, line2Alamat = '';
@@ -3921,12 +4139,12 @@
             
             return `
             <div class="id-card">
-              <div class="id-card-header" style="justify-content: space-between; text-align: center;">
+              <div class="id-card-header" style="justify-content: space-between; text-align: center; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); border-bottom: 1px solid #cbd5e1;">
                 <div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 50px;">${logoKiriHtml}</div>
                 <div style="flex: 1; padding: 0 4px; display: flex; flex-direction: column; justify-content: center;">
-                  <div class="id-card-header-title" style="font-size:0.85rem; font-weight: 900; text-transform:uppercase; margin-bottom:2px;">${db.settings.nama || 'SMP NEGERI 1'}</div>
-                  <div class="id-card-header-sub" style="font-size:0.5rem; line-height:1.15;">${line1Alamat}</div>
-                  ${line2Alamat ? `<div class="id-card-header-sub" style="font-size:0.5rem; line-height:1.15;">${line2Alamat}</div>` : ''}
+                  <div class="id-card-header-title" style="font-size:0.85rem; font-weight: 900; text-transform:uppercase; margin-bottom:2px; color: #0f172a;">${db.settings.nama || 'SMP NEGERI 1'}</div>
+                  <div class="id-card-header-sub" style="font-size:0.6rem; line-height:1.2; color: #475569; font-weight: 600;">${line1Alamat}</div>
+                  ${line2Alamat ? `<div class="id-card-header-sub" style="font-size:0.6rem; line-height:1.2; color: #475569; font-weight: 600;">${line2Alamat}</div>` : ''}
                 </div>
                 <div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 50px;">${logoKananHtml}</div>
               </div>
@@ -3954,9 +4172,13 @@
                 </div>
               </div>
               <div class="id-card-footer">
-                <div>Santun Berprestasi</div>
-                <div style="text-align:right;">
-                  <div style="font-weight:700;color:#0f172a;">${db.settings.kepsek || 'Kepala Sekolah'}</div>
+                <div style="font-size: 0.65rem; font-weight: 700; color: #1d4ed8; line-height: 1.3;">
+                  <div>bit.ly/guruwali2glb</div>
+                  <div>bit.ly/asesmen2glb</div>
+                </div>
+                <div style="text-align:right; line-height: 1.2;">
+                  <div style="font-size:0.6rem; color:#475569;">Kepala Sekolah,</div>
+                  <div style="font-weight:700;color:#0f172a; margin-top: 2px;">${db.settings.kepsek || 'Kepala Sekolah'}</div>
                   <div style="font-size:0.6rem; color:#475569;">NIP ${db.settings.nip ? db.settings.nip.replace(/\./g, '') : '-'}</div>
                 </div>
               </div>
@@ -3981,12 +4203,12 @@
             
             return `
             <div class="id-card">
-              <div class="id-card-header" style="justify-content: space-between; text-align: center;">
+              <div class="id-card-header" style="justify-content: space-between; text-align: center; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); border-bottom: 1px solid #cbd5e1;">
                 <div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 50px;">${logoKiriHtml}</div>
                 <div style="flex: 1; padding: 0 4px; display: flex; flex-direction: column; justify-content: center;">
-                  <div class="id-card-header-title" style="font-size:0.85rem; font-weight: 900; text-transform:uppercase; margin-bottom:2px;">${db.settings.nama || 'SMP NEGERI 1'}</div>
-                  <div class="id-card-header-sub" style="font-size:0.5rem; line-height:1.15;">${line1Alamat}</div>
-                  ${line2Alamat ? `<div class="id-card-header-sub" style="font-size:0.5rem; line-height:1.15;">${line2Alamat}</div>` : ''}
+                  <div class="id-card-header-title" style="font-size:0.85rem; font-weight: 900; text-transform:uppercase; margin-bottom:2px; color: #0f172a;">${db.settings.nama || 'SMP NEGERI 1'}</div>
+                  <div class="id-card-header-sub" style="font-size:0.6rem; line-height:1.2; color: #475569; font-weight: 600;">${line1Alamat}</div>
+                  ${line2Alamat ? `<div class="id-card-header-sub" style="font-size:0.6rem; line-height:1.2; color: #475569; font-weight: 600;">${line2Alamat}</div>` : ''}
                 </div>
                 <div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 50px;">${logoKananHtml}</div>
               </div>
@@ -4012,9 +4234,13 @@
                 </div>
               </div>
               <div class="id-card-footer">
-                <div>Santun Berprestasi</div>
-                <div style="text-align:right;">
-                  <div style="font-weight:700;color:#0f172a;">${db.settings.kepsek || 'Kepala Sekolah'}</div>
+                <div style="font-size: 0.65rem; font-weight: 700; color: #1d4ed8; line-height: 1.3;">
+                  <div>bit.ly/guruwali2glb</div>
+                  <div>bit.ly/asesmen2glb</div>
+                </div>
+                <div style="text-align:right; line-height: 1.2;">
+                  <div style="font-size:0.6rem; color:#475569;">Kepala Sekolah,</div>
+                  <div style="font-weight:700;color:#0f172a; margin-top: 2px;">${db.settings.kepsek || 'Kepala Sekolah'}</div>
                   <div style="font-size:0.6rem; color:#475569;">NIP ${db.settings.nip ? db.settings.nip.replace(/\./g, '') : '-'}</div>
                 </div>
               </div>
@@ -4159,31 +4385,107 @@
               return (sMatch && cMatch && parseInt(sMatch[0], 10) === parseInt(cMatch[0], 10));
           });
           
+          // Helper untuk mendapatkan tingkat kelas (9, 8, atau 7)
+          let getGrade = (k) => {
+              let str = (k || '').toUpperCase();
+              if (str.includes('IX') || str.startsWith('9')) return 9;
+              if (str.includes('VIII') || str.startsWith('8')) return 8;
+              if (str.includes('VII') || str.startsWith('7')) return 7;
+              let match = str.match(/\d+/);
+              return match ? parseInt(match[0]) : 0;
+          };
+
+          // 1. Urutkan berdasarkan Kelas (Tertinggi ke Terendah), Nama Kelas, lalu No Asesmen
           roomStudents.sort((a, b) => {
+              let gradeA = getGrade(a.kelas);
+              let gradeB = getGrade(b.kelas);
+              if (gradeA !== gradeB) return gradeB - gradeA; 
+              
+              // PERBAIKAN: Mengurutkan secara alfabetis nama kelasnya agar A selalu mendahului B
+              let classA = (a.kelas || '').trim().toUpperCase();
+              let classB = (b.kelas || '').trim().toUpperCase();
+              if (classA !== classB) return classA.localeCompare(classB);
+
               let numA = parseInt((a.no_asesmen || '').replace(/\D/g, '')) || 0;
               let numB = parseInt((b.no_asesmen || '').replace(/\D/g, '')) || 0;
               if (numA === numB) return (a.no_asesmen || '').localeCompare(b.no_asesmen || '');
               return numA - numB;
           });
 
-          let half = Math.ceil(roomStudents.length / 2);
-          let leftStudents = roomStudents.slice(0, half), rightStudents = roomStudents.slice(half);
-          let gridHtml = '';
+          // 2. Logika "Two-Queue Smart Fill" (Tumpah Otomatis jika kelas habis)
+          let highestGrade = roomStudents.length > 0 ? getGrade(roomStudents[0].kelas) : -1;
+          let allSameGrade = roomStudents.every(s => getGrade(s.kelas) === highestGrade);
+
+          let groupHigh = [];
+          let groupLow = [];
+
+          if (allSameGrade) {
+              groupLow = [...roomStudents];
+          } else {
+              roomStudents.forEach(s => {
+                  if (getGrade(s.kelas) === highestGrade) groupHigh.push(s);
+                  else groupLow.push(s);
+              });
+          }
+
           const totalDesks = colCount * rowCount;
-          
+          let desks = [];
+          for(let i=0; i<totalDesks; i++) desks.push({A: null, B: null});
+
+          let isUnder17 = roomStudents.length < 17;
+
+          for(let i=0; i<totalDesks; i++) {
+              if (isUnder17) {
+                  // Khusus jika siswa kurang dari 17 orang, isi Meja A (Kanan) saja mengular spiral
+                  if (roomStudents.length > 0) desks[i].A = roomStudents.shift();
+              } else {
+                  // Pola Smart Fill A/B Normal
+                  let rowIndex = Math.floor(i / colCount); 
+                  let isLeftToRight = (rowIndex % 2 === 1); 
+                  
+                  let firstSeat = isLeftToRight ? 'B' : 'A';
+                  let secondSeat = isLeftToRight ? 'A' : 'B';
+                  
+                  let assignSeat = (seatType) => {
+                      if (seatType === 'A') {
+                          if (groupHigh.length > 0) return groupHigh.shift();
+                          if (groupLow.length > 0) return groupLow.shift();
+                      } else {
+                          if (groupLow.length > 0) return groupLow.shift();
+                          if (groupHigh.length > 0) return groupHigh.shift();
+                      }
+                      return null;
+                  };
+                  
+                  desks[i][firstSeat] = assignSeat(firstSeat);
+                  desks[i][secondSeat] = assignSeat(secondSeat);
+              }
+          }
+
+          let gridHtml = '';
           for(let v=0; v < totalDesks; v++) {
               let r = Math.floor(v / colCount), c = v % colCount;
               let step = (rowCount - 1) - r, s;
+              // Pola mengular (Spiral)
               if (step % 2 === 0) s = step * colCount + ((colCount - 1) - c);
               else s = step * colCount + c;
               
-              let lStudent = leftStudents[s], rStudent = rightStudents[s];
+              let lStudent = desks[s].B; // B = KIRI
+              let rStudent = desks[s].A; // A = KANAN
               let defaultPhoto = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='45' height='60' fill='%23cbd5e1'><rect width='45' height='60' rx='4'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23475569' font-size='10' font-weight='bold'>FOTO</text></svg>";
               
               let leftHtml = lStudent ? `<img src="${lStudent.photoUrl || defaultPhoto}" class="kursi-img" alt="Foto" /><div class="kursi-nama" title="${lStudent.nama}">${lStudent.nama}</div><div class="kursi-nomor" data-student-id="${lStudent.id}" title="Klik untuk lihat Kartu">${lStudent.no_asesmen || lStudent.nis || '-'}</div>` : `<div style="flex:1; display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:0.7rem; font-weight:bold;">KOSONG</div>`;
               let rightHtml = rStudent ? `<img src="${rStudent.photoUrl || defaultPhoto}" class="kursi-img" alt="Foto" /><div class="kursi-nama" title="${rStudent.nama}">${rStudent.nama}</div><div class="kursi-nomor" data-student-id="${rStudent.id}" title="Klik untuk lihat Kartu">${rStudent.no_asesmen || rStudent.nis || '-'}</div>` : `<div style="flex:1; display:flex; align-items:center; justify-content:center; color:#94a3b8; font-size:0.7rem; font-weight:bold;">KOSONG</div>`;
 
-              gridHtml += `<div class="denah-meja"><div class="meja-label">M-${s+1}</div><div class="denah-kursi kiri">${leftHtml}</div><div class="denah-kursi kanan">${rightHtml}</div></div>`;
+              // Lencana Huruf A dan B di sudut atas dengan warna biru tua agar tidak tertutup foto
+              let watermarkB = `<div style="position:absolute; top: 6px; left: 8px; font-size: 1.4rem; font-weight: 900; color: #1e3a8a; z-index: 10; pointer-events: none;">B</div>`;
+              let watermarkA = `<div style="position:absolute; top: 6px; right: 8px; font-size: 1.4rem; font-weight: 900; color: #1e3a8a; z-index: 10; pointer-events: none;">A</div>`;
+
+              gridHtml += `<div class="denah-meja">
+                  <div class="meja-label">M-${s+1}</div>
+                  <div class="denah-kursi kiri" style="position:relative;">${watermarkB}<div style="position:relative; z-index:1; width:100%; display:flex; flex-direction:column; align-items:center;">${leftHtml}</div></div>
+                  <div class="denah-kursi kanan" style="position:relative;">${watermarkA}<div style="position:relative; z-index:1; width:100%; display:flex; flex-direction:column; align-items:center;">${rightHtml}</div></div>
+              </div>`;
           }
           document.getElementById('denahTitle').innerText = `DENAH TEMPAT DUDUK RUANG ${select.value}`;
           document.getElementById('denahGridContainer').innerHTML = gridHtml;
@@ -4518,6 +4820,7 @@
           setVal('profNipInput', db.settings.nip || '');
           setVal('settingLogoKiriUrl', db.settings.logoKiriUrl || db.settings.logoUrl || '');
           setVal('settingLogoKananUrl', db.settings.logoKananUrl || '');
+          setVal('settingHeaderBannerUrl', db.settings.headerBannerUrl || '');
           const autoSyncEl = document.getElementById('settingAutoSync');
           if(autoSyncEl) autoSyncEl.checked = db.settings.autoSyncCloud !== false;
           
@@ -4549,68 +4852,86 @@
 
       function renderPanitia() {
           const panitiaList = db.teachers.filter(t => t.role === 'PANITIA');
+          const container = document.getElementById('cardsContainerPanitiaGrid');
+          if(!container) return;
+
           if(panitiaList.length === 0) {
-              document.getElementById('gridPanitia').innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 2rem; color: var(--text-muted);">Belum ada data panitia. Pastikan Kolom M di CSV diisi dengan "PANITIA".</div>';
+              container.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; padding: 2rem; color: var(--text-muted);">Belum ada data panitia. Pastikan Kolom M di CSV diisi dengan "PANITIA".</div>';
               return;
           }
 
-          const logoKiriHtml = (db.settings.logoKiriUrl || db.settings.logoUrl) ? `<img src="${db.settings.logoKiriUrl || db.settings.logoUrl}" style="width:36px; height:36px; object-fit:contain;" />` : `<div style="width:36px;"></div>`;
-          const logoKananHtml = db.settings.logoKananUrl ? `<img src="${db.settings.logoKananUrl}" style="width:36px; height:36px; object-fit:contain;" />` : `<div style="width:36px;"></div>`;
+          const oK = document.getElementById('printOrienKartuPanitia')?.value || 'portrait';
+          const sK = document.getElementById('printScaleKartuPanitia')?.value || '100';
+          const perPage = parseInt(document.getElementById('perPageKartuPanitia')?.value) || 8;
 
-          // Variasi warna cerah & apik untuk background kartu 3D
-          const bgColors = [
-              'linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)', // Biru
-              'linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%)', // Pink
-              'linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)', // Hijau
-              'linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)', // Kuning/Amber
-              'linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%)', // Ungu
-              'linear-gradient(135deg, #ffedd5 0%, #fed7aa 100%)', // Oranye
-              'linear-gradient(135deg, #ccfbf1 0%, #99f6e4 100%)'  // Cyan
-          ];
+          const logoKiriHtml = (db.settings.logoKiriUrl || db.settings.logoUrl) ? `<img src="${db.settings.logoKiriUrl || db.settings.logoUrl}" style="width:45px; height:45px; object-fit:contain;" />` : `<div style="width:45px;"></div>`;
+          const logoKananHtml = db.settings.logoKananUrl ? `<img src="${db.settings.logoKananUrl}" style="width:45px; height:45px; object-fit:contain;" />` : `<div style="width:45px;"></div>`;
 
-          let html = '';
-          panitiaList.forEach((p, index) => {
-              const imgUrl = p.photoUrl || p.photo_csv || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='100' fill='%23cbd5e1'><rect width='80' height='100' rx='8'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23475569' font-size='12' font-weight='bold'>FOTO</text></svg>";
-              const bg = bgColors[index % bgColors.length];
+          const chunks = chunkArray(panitiaList, perPage);
+
+          const html = chunks.map(chunk => {
+              const cardsHtml = chunk.map(p => {
+                  const globalIndex = panitiaList.indexOf(p);
+                  const imgUrl = p.photoUrl || p.photo_csv || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='100' fill='%23cbd5e1'><rect width='80' height='100' rx='8'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23475569' font-size='12' font-weight='bold'>FOTO</text></svg>";
+                  
+                  const titlePita = p.kepanitiaan && p.kepanitiaan !== '-' && p.kepanitiaan !== 'PANITIA' ? p.kepanitiaan : 'SISTEM ASESMEN DIGITAL';
+
+                  return `<div class="panitia-card" data-index="${globalIndex}" style="background: linear-gradient(180deg, #ffffff 0%, #ffffff 18%, #e0f8ea 25%, #e0f8ea 100%); padding: 0; flex-direction: column; gap: 0; align-items: stretch; border: 1px solid #cbd5e1; border-radius: 16px; overflow: hidden; position: relative; page-break-inside: avoid;">
+                      
+                      <!-- KODE BADGE -->
+                      <div style="position: absolute; top: 75px; left: 12px; background: #ef4444; color: white; padding: 4px 10px; border-radius: 6px; font-size: 0.7rem; font-weight: 900; box-shadow: 0 2px 4px rgba(0,0,0,0.2); z-index: 10; border: 1px solid #dc2626;">KODE: ${p.kode}</div>
+
+                      <!-- HEADER AREA -->
+                      <div style="padding: 12px 14px 4px 14px; display: flex; align-items: center; justify-content: space-between; z-index: 2;">
+                          <div style="flex-shrink:0;">${logoKiriHtml}</div>
+                          <div style="text-align: center; flex: 1;">
+                              <div style="font-size: 0.9rem; font-weight: 900; color: #1e3a8a; text-transform: uppercase; letter-spacing: 0.5px;">KARTU PANITIA</div>
+                              <div style="font-size: 0.7rem; color: #334155; font-weight: 800; margin-top: 2px;">${db.settings.nama || 'SMP NEGERI'}</div>
+                              <div style="font-size: 0.6rem; color: #475569; font-weight: 700; margin-top: 1px;">TA ${db.settings.tahunAjaran || '2026/2027'}</div>
+                          </div>
+                          <div style="flex-shrink:0;">${logoKananHtml}</div>
+                      </div>
+
+                      <!-- BODY AREA (Foto & Identitas) -->
+                      <div style="padding: 10px 12px; display: flex; flex-direction: column; align-items: center; flex: 1; z-index: 2;">
+                          <img src="${imgUrl}" style="width: 120px; height: 120px; object-fit: cover; border-radius: 50%; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border: 4px solid #fff; margin-bottom: 12px; z-index: 5;" alt="Foto">
+                          
+                          <!-- PITA HITAM -->
+                          <div style="background: #334155; color: #fff; display: inline-block; padding: 5px 20px; border-radius: 99px; font-size: 0.75rem; font-weight: 900; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); margin-bottom: 12px; text-transform: uppercase; z-index: 6;">
+                              ${titlePita}
+                          </div>
+                          
+                          <div style="text-align: center; width: 100%;">
+                              <div style="font-size: 1.15rem; font-weight: 900; color: #0f172a; margin-bottom: 4px; line-height: 1.2;">${p.nama}</div>
+                              <div style="font-size: 0.85rem; color: #0f172a; font-weight: 900; margin-bottom: 2px; letter-spacing: 0.5px;">NIP ${p.nip !== '-' ? p.nip.replace(/\./g, '') : '-'}</div>
+                              <div style="font-size: 0.8rem; color: #ef4444; font-weight: 900; margin-bottom: 6px; word-break: break-all;">${p.email || '-'}</div>
+                          </div>
+                      </div>
+
+                      <!-- FOOTER AREA -->
+                      <div style="padding: 10px 14px; border-top: 2px dashed #a7f3d0; display: flex; justify-content: space-between; align-items: flex-end; margin-top: auto; background: rgba(255,255,255,0.2);">
+                          <div style="display:flex; flex-direction:column; gap:4px; text-align: left;">
+                              <span style="font-weight:900; color:#1d4ed8; font-size:0.85rem;">bit.ly/guruwali2glb</span>
+                              <span style="font-size:0.75rem; font-weight:800; color:#0f172a;">Kolaborasi dalam Berinovasi</span>
+                          </div>
+                          <div style="text-align: right; line-height: 1.2;">
+                              <div style="font-size: 0.65rem; color: #334155; font-weight: 600;">Kepala Sekolah</div>
+                              <div style="font-size: 0.8rem; font-weight: 900; color: #0f172a; margin-top: 2px;">${db.settings.kepsek || '-'}</div>
+                              <div style="font-size: 0.65rem; color: #334155; font-weight: 700;">NIP ${db.settings.nip ? db.settings.nip.replace(/\./g, '') : '-'}</div>
+                          </div>
+                      </div>
+
+                      <!-- BOTTOM BAR (Sembunyikan saat dicetak) -->
+                      <div class="no-print" style="background: #a7f3d0; padding: 6px; text-align: center; font-size: 0.65rem; color: #065f46; font-weight: 800; border-top: 1px solid #6ee7b7;">
+                          👇 Klik untuk Profil & Tugas Detail
+                      </div>
+                  </div>`;
+              }).join('');
               
-              html += `<div class="panitia-card" data-index="${index}" style="background: ${bg}; padding: 0; flex-direction: column; gap: 0; align-items: stretch; border: 2px solid rgba(255,255,255,0.8);">
-                  <div style="background: rgba(255,255,255,0.4); padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.5); display: flex; align-items: center; justify-content: space-between;">
-                      <div style="flex-shrink:0;">${logoKiriHtml}</div>
-                      <div style="text-align: center; flex: 1;">
-                          <div style="font-size: 0.75rem; font-weight: 900; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px;">KARTU PANITIA</div>
-                          <div style="font-size: 0.6rem; color: #1e293b; font-weight: 800; margin-top: 2px;">${db.settings.nama || 'SMP NEGERI'}</div>
-                          <div style="font-size: 0.55rem; color: #1e293b; font-weight: 700;">TA ${db.settings.tahunAjaran || '2026/2027'}</div>
-                      </div>
-                      <div style="flex-shrink:0;">${logoKananHtml}</div>
-                  </div>
-                  <div style="padding: 1rem 0.75rem; display: flex; flex-direction: column; align-items: center; flex: 1; z-index: 2;">
-                      <img src="${imgUrl}" style="width: 75px; height: 95px; object-fit: cover; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.15); border: 3px solid #fff; margin-bottom: 12px;" alt="Foto">
-                      <div style="text-align: center; width: 100%;">
-                          <div style="font-size: 1.05rem; font-weight: 900; color: #0f172a; margin-bottom: 4px; line-height: 1.2; text-shadow: 0 1px 2px rgba(255,255,255,0.8);">${p.nama}</div>
-                          <div style="background: rgba(15, 23, 42, 0.8); color: #fff; display: inline-block; padding: 4px 12px; border-radius: 99px; font-size: 0.7rem; font-weight: 800; letter-spacing: 0.5px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); margin-bottom: 8px; margin-top: 4px; max-width: 95%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase;">
-                              ${p.kepanitiaan || 'PANITIA'}
-                          </div>
-                          <div>
-                              <span style="font-size: 0.65rem; color: #1e293b; font-weight: 800; background: rgba(255,255,255,0.6); padding: 2px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.8); display: inline-block;">KODE: ${p.kode}</span>
-                          </div>
-                      </div>
-                  </div>
-                  <div style="background: rgba(255,255,255,0.3); padding: 8px 12px; border-top: 1px dashed rgba(255,255,255,0.5); display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
-                      <div style="font-size: 0.6rem; color: #0f172a; font-weight: 700; line-height: 1.2; text-align: left;">
-                          Profesional &<br/>Berintegritas
-                      </div>
-                      <div style="text-align: right; line-height: 1.15;">
-                          <div style="font-size: 0.6rem; color: #334155; font-weight: 600;">Kepala Sekolah</div>
-                          <div style="font-size: 0.7rem; font-weight: 900; color: #0f172a; margin-top: 2px;">${db.settings.kepsek || '-'}</div>
-                          <div style="font-size: 0.6rem; color: #334155; font-weight: 700;">NIP ${db.settings.nip ? db.settings.nip.replace(/\./g, '') : '-'}</div>
-                      </div>
-                  </div>
-                  <div style="background: rgba(0,0,0,0.05); padding: 6px; text-align: center; font-size: 0.6rem; color: #475569; font-weight: 800; border-top: 1px solid rgba(255,255,255,0.3);">
-                      👆 Klik untuk Profil & Tugas Detail
-                  </div>
-              </div>`;
-          });
-          document.getElementById('gridPanitia').innerHTML = html;
+              return `<div class="a4-kertas ${oK}"><div class="a4-content" style="zoom: ${sK}%; padding: 10mm;"><div class="panitia-grid" style="width:100%; align-content: flex-start;">${cardsHtml}</div></div></div>`;
+          }).join('');
+
+          container.innerHTML = html;
       }
 
       function panggilPencetak() {
@@ -4718,9 +5039,25 @@
           unifiedPrintKartu('cardsContainerPengawasGrid', 'printOrienKartuPengawas', 'printScaleKartuPengawas');
       });
 
+      document.getElementById('btnCetakKartuPanitia')?.addEventListener('click', () => {
+          unifiedPrintKartu('cardsContainerPanitiaGrid', 'printOrienKartuPanitia', 'printScaleKartuPanitia');
+      });
+
       ['dokumenJenisSelect', 'dokumenRuangSelect'].forEach(id => {
           const el = document.getElementById(id);
           if (el) { el.addEventListener('change', renderDokumen); }
+      });
+      
+      ['filterKelasBukuInduk', 'filterRuangBukuInduk'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) { el.addEventListener('change', renderBukuInduk); }
+      });
+      
+      document.getElementById('tableBukuIndukBody')?.addEventListener('click', function(e) {
+          const stEl = e.target.closest('.clickable-student');
+          if(stEl && stEl.hasAttribute('data-student-id')) {
+              openKartuModal(stEl.getAttribute('data-student-id'));
+          }
       });
       
       const elTgl = document.getElementById('dokumenTanggalSelect');
@@ -4767,7 +5104,7 @@
       });
       
       ['kartuJenisSelect', 'kartuKelasFilter', 'printOrienKartu', 'printScaleKartu', 'perPageKartu',
-       'kartuJenisViewSelect', 'kartuKelasViewFilter', 'printOrienKartuView', 'printScaleKartuView', 'perPageKartuView',
+       'kartuJenisViewSelect', 'kartuKelasViewFilter', 'kartuRuangViewFilter', 'printOrienKartuView', 'printScaleKartuView', 'perPageKartuView',
        'kartuMuridJenisViewSelect', 'kartuMuridKelasViewFilter', 'kartuMuridOrientationSelect', 'printOrienKartuMurid', 'printScaleKartuMurid', 'perPageKartuMurid'].forEach(id => {
           const el = document.getElementById(id);
           if (el) { el.addEventListener('change', renderCardsGrid); el.addEventListener('input', renderCardsGrid); }
@@ -4778,6 +5115,11 @@
           if (el) { el.addEventListener('change', renderKartuPengawas); el.addEventListener('input', renderKartuPengawas); }
       });
       
+      ['printOrienKartuPanitia', 'printScaleKartuPanitia', 'perPageKartuPanitia'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) { el.addEventListener('change', renderPanitia); el.addEventListener('input', renderPanitia); }
+      });
+
       ['denahRuangSelect', 'denahKapasitasSelect'].forEach(id => {
           const el = document.getElementById(id);
           if (el) { el.addEventListener('change', renderDenah); }
@@ -5045,7 +5387,7 @@
           document.body.classList.remove('printing-modal');
       });
 
-      document.getElementById('gridPanitia')?.addEventListener('click', function(e) {
+      document.getElementById('cardsContainerPanitiaGrid')?.addEventListener('click', function(e) {
           const card = e.target.closest('.panitia-card');
           if(card) {
               const index = card.getAttribute('data-index');
@@ -5207,6 +5549,7 @@
               const payload = { action: 'sendMessage', data: { waktu: wkt, ruang: rng, pesan: psn, foto: photoData } };
               await fetch(db.settings.gasUrl, {
                   method: 'POST',
+                  mode: 'no-cors',
                   headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                   body: JSON.stringify(payload)
               });
@@ -5214,7 +5557,7 @@
               lastMsgData = ''; // Reset agar memaksa render ulang
               fetchMessagesCSV(); // Segera tarik ulang setelah kirim
           } catch(e) {
-              console.error(e);
+              console.warn('Gagal mengirim pesan:', e);
               showToast('Gagal mengirim pesan.');
           }
       });
@@ -5477,6 +5820,28 @@
           reader.readAsDataURL(file);
       });
 
+      document.getElementById('btnSaveHeaderBanner')?.addEventListener('click', () => {
+          db.settings.headerBannerUrl = document.getElementById('settingHeaderBannerUrl').value;
+          saveData();
+          syncDataToCloud();
+          renderDashboard();
+          showToast('Gambar Banner Header berhasil disimpan ke Cloud!');
+      });
+
+      document.getElementById('settingHeaderBannerFile')?.addEventListener('change', function(e) {
+          const file = e.target.files && e.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = function(ev) { 
+              compressImage(ev.target.result, 1200, function(compressedBase64) {
+                  document.getElementById('settingHeaderBannerUrl').value = compressedBase64; 
+                  showToast('Gambar Banner dimuat. Silakan klik Simpan.'); 
+              });
+          };
+          reader.readAsDataURL(file);
+          this.value = '';
+      });
+
       function renderTemplateGalleries() {
           if (!db.settings.templatesPortrait) db.settings.templatesPortrait = [];
           if (!db.settings.templatesLandscape) db.settings.templatesLandscape = [];
@@ -5596,7 +5961,7 @@
               const cardsHtml = chunk.map(p => {
                   let resumeHtml = '';
                   if (db.jadwal_data && db.jadwal_data.length > 0) {
-                      let resume = [];
+                      let resumeRows = [];
                       db.jadwal_data.forEach(day => {
                           let dayRoles = [];
                           day.slots.forEach(slot => {
@@ -5611,25 +5976,36 @@
                           });
                           if (dayRoles.length > 0) {
                               let dayName = day.day.split(',')[0];
-                              resume.push(`<tr><td style="padding:2px; border:1px solid #cbd5e1; font-weight:700; color:#0f172a;">${dayName}</td><td style="padding:2px; border:1px solid #cbd5e1; font-weight:800; color:#1d4ed8;">${dayRoles.join(', ')}</td></tr>`);
+                              resumeRows.push(`
+                                  <tr style="border-bottom: 1px solid #e2e8f0;">
+                                      <td style="padding: 2px 4px; font-weight: 800; color: #0f172a; width: 35%; border-right: none; font-size:0.65rem;">${dayName}</td>
+                                      <td style="padding: 2px 4px; font-weight: 900; color: #1e3a8a; width: 65%; font-size:0.65rem;">: ${dayRoles.join(', ')}</td>
+                                  </tr>
+                              `);
                           }
                       });
-                      if (resume.length > 0) {
-                          resumeHtml = `<table style="width:100%; border-collapse:collapse; text-align:center; font-size:0.55rem; margin-top:6px;">
-                              <thead style="background:#e2e8f0; color:#475569;"><tr><th style="padding:2px; border:1px solid #cbd5e1;">HARI</th><th style="padding:2px; border:1px solid #cbd5e1;">TUGAS RUANG / CADANGAN</th></tr></thead>
-                              <tbody>${resume.join('')}</tbody>
-                          </table>`;
+                      if (resumeRows.length > 0) {
+                          resumeHtml = `
+                          <div style="border: 2px solid #1e3a8a; border-radius: 6px; overflow: hidden; margin-top: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                              <div style="background: #1e3a8a; color: #fff; font-size: 0.55rem; font-weight: 800; text-align: center; padding: 4px; display: flex; align-items: center; justify-content: center; gap: 4px; letter-spacing: 0.5px;">
+                                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg> 
+                                  JADWAL & RUANG PENGAWAS
+                              </div>
+                              <table style="width: 100%; border-collapse: collapse; font-size: 0.65rem; background: #fff;">
+                                  <tbody>${resumeRows.join('')}</tbody>
+                              </table>
+                          </div>`;
                       } else {
-                          resumeHtml = `<div style="font-size:0.6rem; color:#ef4444; text-align:center; margin-top:6px; font-weight:700;">Tidak ada jadwal mengawas</div>`;
+                          resumeHtml = `<div style="font-size:0.65rem; color:#ef4444; text-align:center; margin-top:10px; font-weight:800;">Tidak ada jadwal mengawas</div>`;
                       }
                   } else {
-                      resumeHtml = `<div style="font-size:0.6rem; color:#94a3b8; text-align:center; margin-top:6px;">Jadwal belum disusun</div>`;
+                      resumeHtml = `<div style="font-size:0.65rem; color:#94a3b8; text-align:center; margin-top:10px; font-weight:700;">Jadwal belum disusun</div>`;
                   }
 
-                  const defaultPhoto = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='60' height='75' fill='%23cbd5e1'><rect width='60' height='75' rx='4'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23475569' font-size='10' font-weight='bold'>FOTO</text></svg>";
+                  const defaultPhoto = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='85' height='110' fill='%23cbd5e1'><rect width='85' height='110' rx='4'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23475569' font-size='10' font-weight='bold'>FOTO</text></svg>";
                   
                   return `
-                  <div class="id-card" style="width: 8cm; margin-bottom: 10px; page-break-inside: avoid; border: 1px solid #94a3b8;">
+                  <div class="id-card" style="width: 8.5cm; margin-bottom: 10px; page-break-inside: avoid; border: 1px solid #94a3b8; background: #f8fafc;">
                     <div class="id-card-header" style="justify-content: space-between; text-align: center; padding: 0.4rem; background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%);">
                       <div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 40px;">${logoKiriHtml}</div>
                       <div style="flex: 1; padding: 0 4px; display: flex; flex-direction: column; justify-content: center; color: #fff;">
@@ -5640,25 +6016,30 @@
                       <div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 40px;">${logoKananHtml}</div>
                     </div>
                     <div class="id-card-banner" style="background:#fef3c7; color:#b45309; border-bottom:1px solid #fde68a;">KARTU PENGAWAS ASESMEN</div>
-                    <div class="id-card-body" style="flex-direction: column; padding: 0.6rem;">
-                      <div style="display: flex; width: 100%; gap: 10px;">
-                        <div style="width: 60px; flex-shrink: 0;">
-                          <img src="${p.photoUrl || p.photo_csv || defaultPhoto}" style="width:60px; height:75px; object-fit:cover; border-radius:4px; border:1px solid #cbd5e1;" />
+                    
+                    <!-- NEW BODY LAYOUT -->
+                    <div class="id-card-body" style="padding: 0.5rem; display: flex; gap: 0.5rem; align-items: stretch; flex: 1;">
+                        <div style="width: 2.6cm; flex-shrink: 0; padding: 3px; background: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid #cbd5e1; text-align: center; display: flex; flex-direction: column;">
+                          <img src="${p.photoUrl || p.photo_csv || defaultPhoto}" style="width:100%; height: 3.5cm; object-fit:cover; border-radius:6px; margin-bottom: 4px; flex: 1;" />
+                          <div style="font-size:0.7rem; font-weight:900; background:#facc15; color:#1e3a8a; padding:2px 4px; border-radius:6px; box-shadow: 0 1px 2px rgba(0,0,0,0.15); margin-bottom: 0;">KODE : ${p.kode}</div>
                         </div>
-                        <div style="flex:1; display:flex; flex-direction:column; justify-content:flex-start;">
-                          <div style="font-size:0.8rem; font-weight:900; line-height:1.2; color:#0f172a; text-transform:uppercase;">${p.nama}</div>
-                          <div style="font-size:0.6rem; color:#475569; margin-top: 2px;">NIP ${p.nip !== '-' ? p.nip : ''}</div>
-                          <div style="margin-top: 4px;">
-                              <span style="font-size:0.65rem; font-weight:800; background:#dbeafe; color:#1e40af; padding:2px 6px; border-radius:4px; border:1px solid #bfdbfe;">KODE: ${p.kode}</span>
-                          </div>
+                        <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between; text-align: center;">
+                            <div>
+                                <div style="font-size:0.85rem; font-weight:900; line-height:1.1; color:#1e3a8a; margin-bottom:4px; margin-top:2px;">${p.nama}</div>
+                                <div style="font-size:0.75rem; color:#475569; font-weight: 900; margin-bottom: 2px; letter-spacing: 0.5px;">NIP ${p.nip !== '-' ? p.nip.replace(/\./g, '') : '-'}</div>
+                                <div style="font-size:0.65rem; color:#ef4444; font-weight: 900; margin-bottom: 6px; width: 100%; border-bottom: 1px dashed #cbd5e1; padding-bottom: 4px; letter-spacing: 0px; text-shadow: 0 0 1px rgba(239, 68, 68, 0.2); word-break: break-all; line-height: 1.1;">${p.email || '-'}</div>
+                            </div>
+                            <div style="width: 100%; text-align: left;">
+                                ${resumeHtml}
+                            </div>
                         </div>
-                      </div>
-                      <div style="width: 100%;">
-                        ${resumeHtml}
-                      </div>
                     </div>
-                    <div class="id-card-footer" style="background:#f8fafc; border-top:1px dashed #cbd5e1;">
-                      <div style="font-size:0.55rem; color:#64748b;">Disiplin & Berintegritas</div>
+
+                    <div class="id-card-footer" style="background:#f1f5f9; border-top:1px dashed #cbd5e1; padding: 0.35rem 0.75rem;">
+                      <div style="color:#64748b; display:flex; flex-direction:column; gap:2px;">
+                          <span style="font-weight:900; color:#1d4ed8; font-size:0.75rem;">bit.ly/guruwali2glb</span>
+                          <span style="font-size:0.65rem; font-weight:700;">Kolaborasi dalam Berinovasi</span>
+                      </div>
                       <div style="text-align:right;">
                         <div style="font-size:0.55rem; color:#475569;">Kepala Sekolah</div>
                         <div style="font-weight:800;color:#0f172a;font-size:0.65rem;margin-top:2px;">${db.settings.kepsek || '-'}</div>
@@ -6113,21 +6494,21 @@
               if (record) {
                   const sName = record.student.nama.toUpperCase();
                   const scoreAkumulasi = getAkumulasiSkor(sName);
-                  const scoreColor = scoreAkumulasi > 0 ? '#4ade80' : '#f43f5e';
+                  const scoreColor = scoreAkumulasi > 0 ? '#fef08a' : '#fecdd3';
                   const photo = record.student.photoUrl || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>";
                   
                   el.innerHTML = `
                       <div class="clickable-student" data-student-id="${record.student.id}" style="cursor:pointer; display:flex; flex-direction:column; align-items:center;" title="Klik untuk lihat Kartu Asesmen">
-                          <img src="${photo}" style="width:50px; height:50px; border-radius:50%; object-fit:cover; border:2px solid #38bdf8; box-shadow:0 0 10px rgba(56,189,248,0.5); margin-bottom:4px;" />
-                          <div style="font-size:0.85rem; color:#fff; font-weight:900; text-align:center; line-height:1.1; margin-bottom:4px; max-width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${record.student.nama}</div>
-                          <div style="color:#5eead4; font-size:0.75rem; font-weight:900; background:rgba(20, 184, 166, 0.2); padding:2px 8px; border-radius:4px; border:1px solid #14b8a6; margin-bottom:2px;">
+                          <img src="${photo}" style="width:50px; height:50px; border-radius:50%; object-fit:cover; border:2px solid #ffffff; box-shadow:0 2px 8px rgba(0,0,0,0.25); margin-bottom:4px;" />
+                          <div style="font-size:0.85rem; color:#fff; font-weight:900; text-align:center; line-height:1.1; margin-bottom:4px; max-width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-shadow:0 1px 2px rgba(0,0,0,0.3);">${record.student.nama}</div>
+                          <div style="color:#fef08a; font-size:0.75rem; font-weight:900; background:rgba(15, 23, 42, 0.45); padding:2px 8px; border-radius:4px; border:1px solid rgba(255,255,255,0.4); margin-bottom:2px;">
                               🕒 ${record.waktu}
                           </div>
-                          <div style="color:#94a3b8; font-size:0.7rem; font-weight:700;">${record.student.kelas} | <span style="color:${scoreColor};">Total Skor: ${scoreAkumulasi}</span></div>
+                          <div style="color:#ffffff; font-size:0.7rem; font-weight:700;">${record.student.kelas} | <span style="color:${scoreColor}; font-weight:900;">Total Skor: ${scoreAkumulasi}</span></div>
                       </div>
                   `;
               } else {
-                  el.innerHTML = '<div style="color:#64748b; font-size:0.8rem; margin-top:10px;">Belum ada record</div>';
+                  el.innerHTML = '<div style="color:#f8fafc; font-size:0.8rem; margin-top:10px; font-weight:600;">Belum ada record</div>';
               }
           }
 
@@ -6140,22 +6521,22 @@
               if(fastestGroups[t]) {
                   const sName = fastestGroups[t].student.nama.toUpperCase();
                   const scoreAkumulasi = getAkumulasiSkor(sName);
-                  const sC = scoreAkumulasi > 0 ? '#4ade80' : '#f43f5e';
+                  const sC = scoreAkumulasi > 0 ? '#4ade80' : '#fda4af';
                   const photo = fastestGroups[t].student.photoUrl || "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2394a3b8'><path d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/></svg>";
                   
-                  fgHtml += `<div class="clickable-student" data-student-id="${fastestGroups[t].student.id}" style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.1); padding:6px 0; cursor:pointer;" title="Klik untuk lihat Kartu Asesmen">
+                  fgHtml += `<div class="clickable-student" data-student-id="${fastestGroups[t].student.id}" style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(255,255,255,0.22); padding:6px 0; cursor:pointer;" title="Klik untuk lihat Kartu Asesmen">
                       <div style="display:flex; align-items:center; gap:8px; overflow:hidden;">
-                          <img src="${photo}" style="width:30px; height:30px; border-radius:50%; object-fit:cover; border:1px solid #6366f1;" />
-                          <div style="color:#e2e8f0; font-weight:700; font-size:0.75rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><span class="neon-list-badge" style="margin-right:6px;">Tkt.${t}</span> ${fastestGroups[t].student.nama}</div>
+                          <img src="${photo}" style="width:30px; height:30px; border-radius:50%; object-fit:cover; border:2px solid #ffffff;" />
+                          <div style="color:#ffffff; font-weight:800; font-size:0.75rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"><span class="neon-list-badge" style="margin-right:6px;">Tkt.${t}</span> ${fastestGroups[t].student.nama}</div>
                       </div>
                       <div style="display:flex; flex-direction:column; align-items:flex-end;">
-                          <span style="color:#a5b4fc; font-weight:900; font-size:0.75rem; font-family:monospace;">${fastestGroups[t].waktu}</span>
-                          <span style="color:${sC}; font-weight:900; font-size:0.6rem; background:rgba(0,0,0,0.3); padding:2px 4px; border-radius:4px; margin-top:2px;">Skor: ${scoreAkumulasi}</span>
+                          <span style="color:#fef08a; font-weight:900; font-size:0.75rem; font-family:monospace;">${fastestGroups[t].waktu}</span>
+                          <span style="color:${sC}; font-weight:900; font-size:0.6rem; background:rgba(15,23,42,0.45); padding:2px 4px; border-radius:4px; margin-top:2px;">Skor: ${scoreAkumulasi}</span>
                       </div>
                   </div>`;
               }
           });
-          document.getElementById('neonFastestGroup').innerHTML = fgHtml || '<div style="color:#64748b; padding-top:6px;">Belum ada record</div>';
+          document.getElementById('neonFastestGroup').innerHTML = fgHtml || '<div style="color:#f8fafc; padding-top:6px; font-weight:600;">Belum ada record</div>';
           
           // 10. Render TOP 3 Per Kelas
           let classGroups = {};
@@ -6210,8 +6591,8 @@
           const s = db.students.find(x => x.id === studentId);
           if (s) {
               const initials = s.nama.split(' ').slice(0, 2).map(w => w.charAt(0)).join('').toUpperCase();
-              const logoKiriHtml = (db.settings.logoKiriUrl || db.settings.logoUrl) ? `<img src="${db.settings.logoKiriUrl || db.settings.logoUrl}" style="width:50px; height:50px; object-fit:contain; background:#fff; border-radius:4px; padding:1px;" />` : `<svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>`;
-              const logoKananHtml = db.settings.logoKananUrl ? `<img src="${db.settings.logoKananUrl}" style="width:50px; height:50px; object-fit:contain; background:#fff; border-radius:4px; padding:1px;" />` : `<svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>`;
+              const logoKiriHtml = (db.settings.logoKiriUrl || db.settings.logoUrl) ? `<img src="${db.settings.logoKiriUrl || db.settings.logoUrl}" style="width:50px; height:50px; object-fit:contain; background:#fff; border-radius:4px; padding:1px;" />` : `<svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>`;
+              const logoKananHtml = db.settings.logoKananUrl ? `<img src="${db.settings.logoKananUrl}" style="width:50px; height:50px; object-fit:contain; background:#fff; border-radius:4px; padding:1px;" />` : `<svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>`;
               const defaultQrSvg = generateOfflineQrSvg(s.nisn || s.nis || 'ASESMEN', 60);
 
               let fullAlamatModal = db.settings.alamat || '';
@@ -6226,12 +6607,12 @@
 
               const cardHtml = `
               <div class="id-card" style="width: 100%;">
-                <div class="id-card-header" style="justify-content: space-between; text-align: center;">
+                <div class="id-card-header" style="justify-content: space-between; text-align: center; background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); border-bottom: 1px solid #cbd5e1;">
                   <div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 50px;">${logoKiriHtml}</div>
                   <div style="flex: 1; padding: 0 4px; display: flex; flex-direction: column; justify-content: center;">
-                    <div class="id-card-header-title" style="font-size:0.85rem; font-weight: 900; text-transform:uppercase; margin-bottom:2px;">${db.settings.nama || 'SMP NEGERI 1'}</div>
-                    <div class="id-card-header-sub" style="font-size:0.5rem; line-height:1.15;">${line1Modal}</div>
-                    ${line2Modal ? `<div class="id-card-header-sub" style="font-size:0.5rem; line-height:1.15;">${line2Modal}</div>` : ''}
+                    <div class="id-card-header-title" style="font-size:0.85rem; font-weight: 900; text-transform:uppercase; margin-bottom:2px; color: #0f172a;">${db.settings.nama || 'SMP NEGERI 1'}</div>
+                    <div class="id-card-header-sub" style="font-size:0.6rem; line-height:1.2; color: #475569; font-weight: 600;">${line1Modal}</div>
+                    ${line2Modal ? `<div class="id-card-header-sub" style="font-size:0.6rem; line-height:1.2; color: #475569; font-weight: 600;">${line2Modal}</div>` : ''}
                   </div>
                   <div style="flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 50px;">${logoKananHtml}</div>
                 </div>
@@ -6248,18 +6629,22 @@
                     <div class="id-details-row"><span class="id-details-label" style="width:78px;">Tmp. Tgl. Lahir</span><span class="id-details-colon">:</span><span class="id-details-val">${s.tempat_lahir || '-'}${s.tgl_lahir ? ', ' + s.tgl_lahir : ''}</span></div>
                     <div class="id-details-row"><span class="id-details-label" style="width:78px;">Wali Kelas</span><span class="id-details-colon">:</span><span class="id-details-val">${s.wali || '-'}</span></div>
                     <div class="id-details-row"><span class="id-details-label" style="width:78px;">Guru Wali</span><span class="id-details-colon">:</span><span class="id-details-val">${s.guru_wali || '-'}</span></div>
-                    <div class="id-details-row"><span class="id-details-label" style="width:78px;">Akun Belajar</span><span class="id-details-colon">:</span><span class="id-details-val">${s.akun_belajar || '-'}</span></div>
-                    <div class="id-details-row"><span class="id-details-label" style="width:78px;">Ruang</span><span class="id-details-colon">:</span><span class="id-details-val">${s.ruang || '-'}</span></div>
-                  </div>
+                  <div class="id-details-row"><span class="id-details-label" style="width:78px;">Akun Belajar</span><span class="id-details-colon">:</span><span class="id-details-val">${s.akun_belajar || '-'}</span></div>
+                  <div class="id-details-row"><span class="id-details-label" style="width:78px;">Ruang</span><span class="id-details-colon">:</span><span class="id-details-val">${s.ruang || '-'}</span></div>
                 </div>
-                <div class="id-card-footer">
-                  <div>Santun Berprestasi</div>
-                  <div style="text-align:right;">
-                    <div style="font-weight:700;color:#0f172a;">${db.settings.kepsek || 'Kepala Sekolah'}</div>
-                    <div style="font-size:0.6rem; color:#475569;">NIP ${db.settings.nip ? db.settings.nip.replace(/\./g, '') : '-'}</div>
-                  </div>
+              </div>
+              <div class="id-card-footer">
+                <div style="font-size: 0.65rem; font-weight: 700; color: #1d4ed8; line-height: 1.3;">
+                  <div>bit.ly/guruwali2glb</div>
+                  <div>bit.ly/asesmen2glb</div>
                 </div>
-              </div>`;
+                <div style="text-align:right; line-height: 1.2;">
+                  <div style="font-size:0.6rem; color:#475569;">Kepala Sekolah,</div>
+                  <div style="font-weight:700;color:#0f172a; margin-top: 2px;">${db.settings.kepsek || 'Kepala Sekolah'}</div>
+                  <div style="font-size:0.6rem; color:#475569;">NIP ${db.settings.nip ? db.settings.nip.replace(/\./g, '') : '-'}</div>
+                </div>
+              </div>
+            </div>`;
 
               document.getElementById('kartuModalContent').innerHTML = cardHtml;
               document.getElementById('modalKartu').classList.add('open');
@@ -6858,17 +7243,17 @@
           `;
           document.body.appendChild(syncOverlay);
 
-          fetchRealtimeGasData(false).then(async () => {
-              // PERMINTAAN USER: Menarik seluruh data CSV secara OTOMATIS saat loading
-              await Promise.all([
-                  fetchPesertaCSV(true),
-                  fetchGuruCSV(true),
-                  fetchNilaiCSV(true)
-              ]);
+          fetchRealtimeGasData(false).then(() => {
+              // Sembunyikan overlay dengan cepat tanpa menunggu penarikan CSV selesai
               setTimeout(() => {
                   syncOverlay.style.opacity = '0';
                   setTimeout(() => syncOverlay.remove(), 500);
-              }, 600);
+              }, 400); // Tampil singkat, langsung tutup
+              
+              // PERMINTAAN USER: Jalankan penarikan data CSV berat murni di latar belakang (tanpa await)
+              fetchPesertaCSV(true);
+              fetchGuruCSV(true);
+              fetchNilaiCSV(true);
           });
       } else {
           // Auto-tarik data CSV walau tanpa GAS
